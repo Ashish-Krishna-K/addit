@@ -1,6 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { GoogleAuthProvider, getAuth, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
+import { getFirestore, setDoc, doc } from "firebase/firestore";
+
+import store from './app/store';
+
+import { userLoggedIn } from './features/currentUser.js/currentUserSlice';
 
 
 // Your web app's Firebase configuration
@@ -19,21 +23,35 @@ const provider = new GoogleAuthProvider();
 const db = getFirestore(app);
 
 const auth = getAuth();
-signInWithPopup(auth, provider)
-  .then((result) => {
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    // ...
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });
+
+const signIn = async () => {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (error) {
+    console.log (error)
+  }
+}
+
+const logOut = async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.log (error)
+  }
+} 
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    store.dispatch(userLoggedIn(null));
+    return;
+  }
+  const { displayName, email, photoURL, uid } = user.providerData[0];
+  store.dispatch(userLoggedIn( { displayName, email, photoURL, uid } ));
+  console.log(displayName);
+})
+
+
+export {
+  signIn,
+  logOut,
+}
