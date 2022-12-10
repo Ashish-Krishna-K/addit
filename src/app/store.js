@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import currentUserReducer from '../features/currentUser.js/currentUserSlice';
+import currentUserReducer from '../features/currentUser/currentUserSlice';
 
 export default configureStore({
   reducer: {

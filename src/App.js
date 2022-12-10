@@ -1,13 +1,11 @@
 import React from "react";
-import { useSelector, useDispatch } from 'react-redux'
-import CurrentUser from "./features/currentUser.js/CurrentUser";
+import Header from "./features/header/Header";
 
 function App() {
 
   return (
     <div className="App">
-      hello
-      <CurrentUser />
+      <Header />
     </div>
   );
 }

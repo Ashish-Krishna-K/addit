@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { signIn, logOut } from '../../firebase'
+import { signIn, logOut } from '../../app/firebase'
 
 const CurrentUser = () => {
     const user = useSelector(state => state.loggedInUser);

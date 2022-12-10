@@ -2,9 +2,9 @@ import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { getFirestore, setDoc, doc } from "firebase/firestore";
 
-import store from './app/store';
+import store from './store';
 
-import { userLoggedIn } from './features/currentUser.js/currentUserSlice';
+import { userLoggedIn } from '../features/currentUser/currentUserSlice';
 
 
 // Your web app's Firebase configuration
