@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
-import { getFirestore, setDoc, doc } from "firebase/firestore";
+import { getFirestore, addDoc, setDoc, doc, collection, serverTimestamp, deleteDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 import store from './store';
 
@@ -21,8 +22,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const provider = new GoogleAuthProvider();
 const db = getFirestore(app);
+const storage = getStorage();
 
 const auth = getAuth();
+
+const activeUser = {
+  displayName: null,
+  email: null,
+  photoURL: null,
+  uid: null,
+}
 
 const signIn = async () => {
   try {
@@ -46,12 +55,61 @@ onAuthStateChanged(auth, (user) => {
     return;
   }
   const { displayName, email, photoURL, uid } = user.providerData[0];
-  store.dispatch(userLoggedIn( { displayName, email, photoURL, uid } ));
+  activeUser.displayName = displayName;
+  activeUser.email = email;
+  activeUser.photoURL = photoURL;
+  activeUser.uid = uid;
+  store.dispatch(userLoggedIn(activeUser));
   console.log(displayName);
 })
 
+const createNewPost = async (title, type, content, image) => {
+  if (type === "text") {
+    const addPost = await addDoc(collection(db, "Posts"), {
+      createdBy: Object.assign(activeUser),
+      createdAt: serverTimestamp(),
+      postTitle: title,
+      postContent: { type, content },
+      postUpvotes: 0,
+      repliesArray: [],
+    })
+    console.log('postAdded')
+  } else {
+    const addPost = await addDoc(collection(db, "Posts"), {
+      createdBy: Object.assign(activeUser),
+      createdAt: serverTimestamp(),
+      postTitle: title,
+      postContent: {},
+      postUpvotes: 0,
+      repliesArray: [],
+    });
+    console.log('postAdded')
+    for (const file of image) {
+      uploadImages(file, addPost.id, type)
+    }
+  }
+}
+
+const uploadImages = async (file, docId, type) => {
+  const imagesRef = ref(storage, `images/${docId}/${file.name}`);
+  try {
+    const imageUploaded = await uploadBytes(imagesRef, file);
+    console.log('image uploaded')
+    await updateDoc(doc(db, "Posts", docId), {
+      "postContent.type": type,
+      "postContent.content": arrayUnion(imageUploaded.metadata.fullPath),
+    })
+    console.log('post edited')
+  } catch(error) {
+    console.log(error)
+    await deleteDoc(doc(db, "Posts", docId))
+    console.log('post deleted')
+  }
+} 
 
 export {
   signIn,
   logOut,
+  createNewPost,
+
 }
