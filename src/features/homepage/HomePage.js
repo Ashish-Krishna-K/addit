@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { fetchPosts } from "../../app/firebase";
 
+import PostView from "../posts/PostTitlesView";
+
 const HomePage = () => {
     const fetchedPosts = useSelector(state => state.fetchedPosts);
 
@@ -11,17 +13,9 @@ const HomePage = () => {
 
     console.log(fetchedPosts);
     return (
-            <div>{
-                fetchedPosts.map(post => {
-                    return (
-                        <div dataset-postid={post.postId} key={post.postId}>
-                            <p>upvotes: {post.postUpvotes}</p>
-                            <p>{post.postTitle}</p>
-                            <p>replies: {post.repliesArray.length}</p>
-                        </div>
-                    )
-                })
-            }</div>
+        <div>{
+            fetchedPosts.map(post => <PostView post={post} key={post.postId}/>)
+        }</div>
     )
 }
 

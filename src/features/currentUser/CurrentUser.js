@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
-import { signIn, logOut } from '../../app/firebase'
+import { Link } from 'react-router-dom';
+import { signIn, logOut } from '../../app/firebase';
 
 const CurrentUser = () => {
     const user = useSelector(state => state.loggedInUser);
@@ -17,11 +18,11 @@ const CurrentUser = () => {
             <button onClick={handleLogin}>Login</button>
             {
                 user.displayName === null ? 
-                <p> Welcome, Anonymous user</p> :
-                <>
+                <Link to="/profile"> Welcome, Anonymous user</Link> :
+                <Link to="/profile">
                     <p>Welcome, {user.displayName}</p>
                     <img src={user.photoURL} alt={user.displayName} />
-                </>
+                </Link>
             }
             <button onClick={handleLogout}>Logout</button>
         </>

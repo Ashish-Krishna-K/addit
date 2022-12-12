@@ -147,6 +147,7 @@ const fetchPosts = async (user) => {
         } = doc.data()
 
         return {
+          postId: doc.id,
           createdBy,
           createdAt: createdAt.toDate().toDateString(),
           postTitle,
