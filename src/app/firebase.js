@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
-import { getFirestore, addDoc, setDoc, doc, collection, serverTimestamp, deleteDoc, updateDoc, arrayUnion, query, orderBy, startAt, getDocs, where } from "firebase/firestore";
+import { getFirestore, addDoc, setDoc, doc, collection, serverTimestamp, deleteDoc, updateDoc, arrayUnion, query, orderBy, startAt, getDocs, where, getDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 import store from './store';
@@ -165,9 +165,19 @@ const fetchPosts = async (user) => {
 
 } 
 
+const fetchSinglePost = async (postId) => {
+  try {
+    const fetchedData = await getDoc(doc(db, "Posts", postId));
+    return fetchedData.data();
+  } catch(error) {
+    console.log(error)
+  }
+}
+
 export {
   signIn,
   logOut,
   createNewPost,
   fetchPosts,
+  fetchSinglePost,
 }
