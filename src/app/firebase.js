@@ -1,11 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
-import { getFirestore, addDoc, setDoc, doc, collection, serverTimestamp, deleteDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { getFirestore, addDoc, setDoc, doc, collection, serverTimestamp, deleteDoc, updateDoc, arrayUnion, query, orderBy, startAt, getDocs, where } from "firebase/firestore";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 import store from './store';
 
 import { userLoggedIn } from '../features/currentUser/currentUserSlice';
+import { fetchedPostsFromDB } from "../features/posts/fetchedPostsSlice";
 
 
 // Your web app's Firebase configuration
@@ -107,9 +108,65 @@ const uploadImages = async (file, docId, type) => {
   }
 } 
 
+const fetchPosts = async (user) => {
+
+  try {
+    if (user === undefined) {
+      const data = await getDocs(collection(db, "Posts"));
+      const posts = data.docs.map(doc => {
+        const { 
+          createdBy, 
+          createdAt, 
+          postTitle,
+          postContent,
+          postUpvotes,
+          repliesArray,  
+        } = doc.data()
+        return {
+          postId: doc.id,
+          createdBy,
+          createdAt: createdAt.toDate().toDateString(),
+          postTitle,
+          postContent,
+          postUpvotes,
+          repliesArray
+        } 
+      });
+      store.dispatch(fetchedPostsFromDB(posts));
+      console.log('fetched posts for home page')
+    } else {
+      const data = await getDocs(query(collection(db, "Posts"), where("createdBy.uid", "==", user)))
+      const userPosts = data.docs.map(doc => {
+        const { 
+          createdBy, 
+          createdAt, 
+          postTitle,
+          postContent,
+          postUpvotes,
+          repliesArray,  
+        } = doc.data()
+
+        return {
+          createdBy,
+          createdAt: createdAt.toDate().toDateString(),
+          postTitle,
+          postContent,
+          postUpvotes,
+          repliesArray
+        } 
+      });
+      store.dispatch(fetchedPostsFromDB(userPosts));
+      console.log('fetched posts for user page')
+    }
+  } catch(error) {
+    console.log(error)
+  }
+
+} 
+
 export {
   signIn,
   logOut,
   createNewPost,
-
+  fetchPosts,
 }

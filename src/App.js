@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from 'react-redux';
 
 import Header from "./features/header/Header";
+import HomePage from "./features/homepage/HomePage";
 import CreatePost from "./features/posts/CreatePost";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <p>You need to login to add a new post</p> :
         <CreatePost />
       }
+      <HomePage />
     </div>
   );
 }
