@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createNewPost } from "../../app/firebase";
 
 const acceptedFileFormats = '.png, .jpg, .jpeg, .webp'
@@ -7,7 +8,8 @@ const CreatePost = () => {
     const [postType, setPostType] = useState({ value: 'text'});
     const [title, setTitle] = useState({ value: '' });
     const [content, setContent] = useState({ value: '' });
-    const [uploadImage, setUploadImage] = useState({ value: [] })
+    const [uploadImage, setUploadImage] = useState({ value: [] });
+    const navigate = useNavigate();
     
     const handleTypeChange = (e) => {
         setPostType({
@@ -40,6 +42,16 @@ const CreatePost = () => {
         setContent({ value: '' });
         setPostType({ value: 'text'});
         setUploadImage({ value: [] });
+        navigate('/');
+    }
+
+    const handleCancel = (e) => {
+        e.preventDefault();
+        setTitle({ value: '' });
+        setContent({ value: '' });
+        setPostType({ value: 'text'});
+        setUploadImage({ value: [] });
+        navigate('/');
     }
     
     return (
@@ -91,7 +103,7 @@ const CreatePost = () => {
             </>
 
             <>
-                <button type="button">Cancel</button>
+                <button type="button" onClick={handleCancel}>Cancel</button>
                 <button type="submit">Post</button>
             </>
 

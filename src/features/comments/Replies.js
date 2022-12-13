@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 import { fetchReplyFromDB } from "../../app/firebase";
 import { replyButtonClicked } from '../comments/showReplyFormSlice'
@@ -28,17 +29,19 @@ const Replies = ({id}) => {
         replyUpvotes,
         repliesArray,
     } = fetchedReply
-    const handleReplyButtonClicked = () => dispatch(replyButtonClicked());
+
+    const handleReplyButtonClicked = (e) => dispatch(replyButtonClicked(e.target.dataset.id));
+    
     return(
         <div>{replyContent &&
             <>
-                <p>{createdBy.displayName}</p>
+                <Link to="/profile" state={createdBy.uid}>{createdBy.displayName}</Link>
                 <p>{replyUpvotes}</p>
                 <p>{replyContent.value}</p>
                 <p>replies: {repliesArray.length}</p>
                 <div>
-                        <button onClick={handleReplyButtonClicked}>Reply</button>
-                        {showReplyForm && <AddReply postId={parentPost} parentType={'comment'} parentId={replyId}/>}
+                        <button data-id={replyId} onClick={handleReplyButtonClicked}>Reply</button>
+                        {showReplyForm.show && showReplyForm.id === replyId && <AddReply postId={parentPost} parentType={'comment'} parentId={replyId}/>}
                 </div>
                 <>{repliesArray.map((reply, index) => <Replies id={reply} key={index}/>)}</>
             </>

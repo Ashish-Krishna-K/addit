@@ -7,7 +7,7 @@ import store from './store';
 
 import { userLoggedIn } from '../features/currentUser/currentUserSlice';
 import { fetchedPostsFromDB } from "../features/posts/fetchedPostsSlice";
-
+import { fetchedCommentsFromDB } from "../features/comments/fetchedCommentsSlice";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -197,6 +197,7 @@ const addReplyToDB = async (postId, content, parentType, parentId) => {
     });
     console.log('comment created');
     await updateReplyInParentOnDB(parentType, parentId, addReply.id);
+    window.location.reload();
   } catch (error) {
     console.log(error)
   }
@@ -220,7 +221,6 @@ const updateReplyInParentOnDB = async (parentType, parentId, replyId) => {
 }
 
 const fetchReplyFromDB = async (replyId) => {
-  console.log(replyId);
   try {
     const fetchedData = await getDoc(doc(db, "Comments", replyId));
     if (fetchedData.exists()) {
@@ -253,6 +253,46 @@ const fetchReplyFromDB = async (replyId) => {
   }
 }
 
+const fetchComments = async (user) => {
+  try {
+    const data = await getDocs(query(collection(db, "Comments"), where("createdBy.uid", "==", user)))
+    const userReplies = data.docs.map(doc => {
+      const { 
+        createdBy,
+        createdAt,
+        parentPost,
+        parent,
+        replyContent,
+        replyUpvotes,
+        repliesArray,  
+      } = doc.data()
+
+      return {
+        replyId: doc.id,
+        createdBy,
+        createdAt: createdAt.toDate().toDateString(),
+        parentPost,
+        parent,
+        replyContent,
+        replyUpvotes,
+        repliesArray
+      } 
+    });
+    store.dispatch(fetchedCommentsFromDB(userReplies));
+    console.log('fetched comments for user page')
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const updatePostUpvote = () => {
+  try {
+
+  } catch (error) {
+
+  }
+}
+
 export {
   signIn,
   logOut,
@@ -262,4 +302,5 @@ export {
   downloadImages,
   addReplyToDB,
   fetchReplyFromDB,
+  fetchComments,
 }

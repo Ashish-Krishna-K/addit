@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 
 import { addReplyToDB } from "../../app/firebase";
+import { replyButtonClicked } from '../comments/showReplyFormSlice';
 
 const AddReply = (props) => {
     const [replyContent, setReplyContent] = useState({ value: ''});
+    const dispatch = useDispatch();
 
     const handleInput = (e) => {
         setReplyContent({
@@ -14,11 +17,15 @@ const AddReply = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         addReplyToDB(props.postId, replyContent, props.parentType, props.parentId);
-        setReplyContent({
-            value: ''
-        })
+        setReplyContent({ value: '' });
+        dispatch(replyButtonClicked(e.target.dataset.id));
     }
 
+    const handleCancel = (e) => {
+        e.preventDefault();
+        setReplyContent({ value: '' });
+        dispatch(replyButtonClicked(e.target.dataset.id));
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -27,6 +34,7 @@ const AddReply = (props) => {
             onChange={handleInput}
             ></textarea>
             <button type="submit">Post</button>
+            <button type="button" onClick={handleCancel}>Cancel</button>
         </form>
     )
 }

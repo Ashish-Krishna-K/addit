@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { fetchSinglePost, downloadImages } from "../../app/firebase";
-import { replyButtonClicked } from '../comments/showReplyFormSlice'
+import { replyButtonClicked } from '../comments/showReplyFormSlice';
 import AddReply from "../comments/AddReply";
 import Replies from "../comments/Replies";
 
@@ -44,20 +44,22 @@ const ViewPost = () => {
         } 
     }, [activePost]);
 
-    const handleReplyButtonClicked = () => dispatch(replyButtonClicked());
+    const handleReplyButtonClicked = (e) => {
+        dispatch(replyButtonClicked(e.target.dataset.id))
+    };
     return (
         <>{ !postTitle ? <p>loading</p> :
             <div>
                 <p>{postTitle}</p>
-                <p>{createdBy.displayName}</p>
+                <Link to="/profile" state={createdBy.uid}>{createdBy.displayName}</Link>
                 <p>{postUpvotes}</p>
                 <div>{
                     postContent.type === 'text' ? <p>{postContent.content}</p> : 
                     postImages.map(image => <img src={image} alt="Post" key={image} />)
                 }</div>
                 <div>
-                        <button onClick={handleReplyButtonClicked}>Reply</button>
-                        {showReplyForm && <AddReply postId={id} parentType={'post'} parentId={id}/>}
+                        <button data-id={id} onClick={handleReplyButtonClicked}>Reply</button>
+                        {showReplyForm.show && showReplyForm.id === id && <AddReply postId={id} parentType={'post'} parentId={id}/>}
                 </div>
                 <>{repliesArray.map((reply, index) => <Replies id={reply} key={index}/>)}</>
             </div>

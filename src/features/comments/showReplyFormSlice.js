@@ -1,12 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = false;
+const initialState = {
+    show: false,
+    id: ''
+};
 
 const showReplyFormSlice = createSlice({
     name: 'replyForm',
     initialState,
     reducers: {
-        replyButtonClicked: (state) => !state
+        replyButtonClicked: (state, action) => {
+            return {
+                show: !state.show,
+                id: action.payload,
+            }
+        }
     }
 })
 
