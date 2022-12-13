@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import { fetchSinglePost, downloadImages } from "../../app/firebase";
+import { replyButtonClicked } from '../comments/showReplyFormSlice'
 import AddReply from "../comments/AddReply";
+import Replies from "../comments/Replies";
 
 const ViewPost = () => {
     const location = useLocation();
+    const showReplyForm = useSelector(state => state.showReplyForm);
     const { id } = location.state;
     const [activePost, setActivePost] = useState({});
     const [postImages, setPostImages] = useState([]);
-    const [isReplyButtonClicked, setIsReplyButtonClicked] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         fetchSinglePost(id).then((post) => {
@@ -40,8 +44,7 @@ const ViewPost = () => {
         } 
     }, [activePost]);
 
-    const handleReplyButtonClicked = () => setIsReplyButtonClicked(true);
-    
+    const handleReplyButtonClicked = () => dispatch(replyButtonClicked());
     return (
         <>{ !postTitle ? <p>loading</p> :
             <div>
@@ -53,11 +56,10 @@ const ViewPost = () => {
                     postImages.map(image => <img src={image} alt="Post" key={image} />)
                 }</div>
                 <div>
-                    <>
                         <button onClick={handleReplyButtonClicked}>Reply</button>
-                        {isReplyButtonClicked && <AddReply postId={id} parentType={'post'}/>}
-                    </>
+                        {showReplyForm && <AddReply postId={id} parentType={'post'} parentId={id}/>}
                 </div>
+                <>{repliesArray.map((reply, index) => <Replies id={reply} key={index}/>)}</>
             </div>
         }</>
     )

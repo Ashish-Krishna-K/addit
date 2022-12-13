@@ -219,6 +219,40 @@ const updateReplyInParentOnDB = async (parentType, parentId, replyId) => {
   }
 }
 
+const fetchReplyFromDB = async (replyId) => {
+  console.log(replyId);
+  try {
+    const fetchedData = await getDoc(doc(db, "Comments", replyId));
+    if (fetchedData.exists()) {
+        const {
+          createdBy,
+          createdAt,
+          parentPost,
+          parent,
+          replyContent,
+          replyUpvotes,
+          repliesArray,
+      } = fetchedData.data()
+      console.log('reply fetched')
+      return  {
+          replyId: fetchedData.id,
+          createdBy,
+          createdAt,
+          parentPost,
+          parent,
+          replyContent,
+          replyUpvotes,
+          repliesArray,
+      }
+    } else {
+      return null;
+    }
+    
+  } catch(error) {
+    console.log(error)
+  }
+}
+
 export {
   signIn,
   logOut,
@@ -227,4 +261,5 @@ export {
   fetchSinglePost,
   downloadImages,
   addReplyToDB,
+  fetchReplyFromDB,
 }

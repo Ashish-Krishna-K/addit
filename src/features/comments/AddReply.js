@@ -13,8 +13,10 @@ const AddReply = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // console.log(props);
-        addReplyToDB(props.postId, replyContent, props.parentType, props.postId)
+        addReplyToDB(props.postId, replyContent, props.parentType, props.parentId);
+        setReplyContent({
+            value: ''
+        })
     }
 
 
