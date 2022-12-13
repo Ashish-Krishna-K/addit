@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { getFirestore, addDoc, setDoc, doc, collection, serverTimestamp, deleteDoc, updateDoc, arrayUnion, query, orderBy, startAt, getDocs, where, getDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 import store from './store';
 
@@ -174,10 +174,57 @@ const fetchSinglePost = async (postId) => {
   }
 }
 
+const downloadImages = async (path) => {
+  try {
+    const imgRef = ref(storage, path)
+    const downloadedData = await getDownloadURL(imgRef);
+    return downloadedData
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const addReplyToDB = async (postId, content, parentType, parentId) => {
+  try {
+    const addReply = await addDoc(collection(db, "Comments"), {
+      createdBy: Object.assign(activeUser),
+      createdAt: serverTimestamp(),
+      parentPost: postId,
+      parent: { parentType, parentId },
+      replyContent: content,
+      replyUpvotes: 0,
+      repliesArray: [],
+    });
+    console.log('comment created');
+    await updateReplyInParentOnDB(parentType, parentId, addReply.id);
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const updateReplyInParentOnDB = async (parentType, parentId, replyId) => {
+  try {
+    if (parentType === 'post') {
+      await updateDoc(doc(db, "Posts", parentId), {
+        "repliesArray": arrayUnion(replyId)
+      })
+    } else {
+      await updateDoc(doc(db, "Comments", parentId), {
+        "repliesArray": arrayUnion(replyId)
+      })
+    }
+    console.log('reply reference added to parent');
+  } catch(error) {
+    console.log(error)
+  }
+}
+
 export {
   signIn,
   logOut,
   createNewPost,
   fetchPosts,
   fetchSinglePost,
+  downloadImages,
+  addReplyToDB,
 }
