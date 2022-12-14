@@ -1,0 +1,9 @@
+.post-title-view {
+    border: 1px solid black;
+    text-decoration: none;
+}
+
+.post-title-container {
+    max-height: 300px;
+    overflow: auto;
+}

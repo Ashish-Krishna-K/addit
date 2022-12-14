@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
-import { getFirestore, addDoc, setDoc, doc, collection, serverTimestamp, deleteDoc, updateDoc, arrayUnion, query, orderBy, startAt, getDocs, where, getDoc } from "firebase/firestore";
+import { getFirestore, addDoc, doc, collection, serverTimestamp, deleteDoc, updateDoc, arrayUnion, query, orderBy, startAfter, getDocs, where, getDoc, limit, getCountFromServer  } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 import store from './store';
@@ -24,6 +24,8 @@ const app = initializeApp(firebaseConfig);
 const provider = new GoogleAuthProvider();
 const db = getFirestore(app);
 const storage = getStorage();
+const postsCollection = collection(db, "Posts");
+const commentsCollection = collection(db, "Comments");
 
 const auth = getAuth();
 
@@ -33,6 +35,9 @@ const activeUser = {
   photoURL: null,
   uid: null,
 }
+
+let currentQueryLastPost = null;
+let currentQueryLastReply = null;
 
 const signIn = async () => {
   try {
@@ -61,12 +66,11 @@ onAuthStateChanged(auth, (user) => {
   activeUser.photoURL = photoURL;
   activeUser.uid = uid;
   store.dispatch(userLoggedIn(activeUser));
-  console.log(displayName);
 })
 
 const createNewPost = async (title, type, content, image) => {
   if (type === "text") {
-    const addPost = await addDoc(collection(db, "Posts"), {
+    const addPost = await addDoc(postsCollection, {
       createdBy: Object.assign(activeUser),
       createdAt: serverTimestamp(),
       postTitle: title,
@@ -76,7 +80,7 @@ const createNewPost = async (title, type, content, image) => {
     })
     console.log('postAdded')
   } else {
-    const addPost = await addDoc(collection(db, "Posts"), {
+    const addPost = await addDoc(postsCollection, {
       createdBy: Object.assign(activeUser),
       createdAt: serverTimestamp(),
       postTitle: title,
@@ -108,11 +112,27 @@ const uploadImages = async (file, docId, type) => {
   }
 } 
 
+const returnHomePostsQuery = () => {
+  return currentQueryLastPost ? query(postsCollection, orderBy("createdAt", 'desc'), startAfter(currentQueryLastPost), limit(10)) :
+  query(postsCollection, orderBy("createdAt", 'desc'), limit(10))
+}
+
+const returnUserPostsQuery = (user) => {
+  return currentQueryLastPost ? query(postsCollection, orderBy("createdAt", "desc"), startAfter(currentQueryLastPost), where("createdBy.uid", "==", user), limit(10)) :
+  query(postsCollection, orderBy("createdAt", "desc"), where("createdBy.uid", "==", user), limit(10))
+}
+
+const returnCommentsQuery = (user) => {
+  return currentQueryLastReply ? query(commentsCollection, orderBy("createdAt", "desc"), startAfter(currentQueryLastReply), where("createdBy.uid", "==", user), limit(10)) :
+  query(commentsCollection, orderBy("createdAt", "desc"), where("createdBy.uid", "==", user), limit(10))
+}
+
 const fetchPosts = async (user) => {
 
   try {
     if (user === undefined) {
-      const data = await getDocs(collection(db, "Posts"));
+      const homePageQuery = returnHomePostsQuery();
+      const data = await getDocs(homePageQuery);
       const posts = data.docs.map(doc => {
         const { 
           createdBy, 
@@ -133,9 +153,11 @@ const fetchPosts = async (user) => {
         } 
       });
       store.dispatch(fetchedPostsFromDB(posts));
-      console.log('fetched posts for home page')
+      currentQueryLastPost = data.docs.pop();
+      console.log('fetched posts for home page');
     } else {
-      const data = await getDocs(query(collection(db, "Posts"), where("createdBy.uid", "==", user)))
+      const userPageQuery = returnUserPostsQuery(user);
+      const data = await getDocs(userPageQuery);
       const userPosts = data.docs.map(doc => {
         const { 
           createdBy, 
@@ -186,7 +208,7 @@ const downloadImages = async (path) => {
 
 const addReplyToDB = async (postId, content, parentType, parentId) => {
   try {
-    const addReply = await addDoc(collection(db, "Comments"), {
+    const addReply = await addDoc(commentsCollection, {
       createdBy: Object.assign(activeUser),
       createdAt: serverTimestamp(),
       parentPost: postId,
@@ -255,7 +277,8 @@ const fetchReplyFromDB = async (replyId) => {
 
 const fetchComments = async (user) => {
   try {
-    const data = await getDocs(query(collection(db, "Comments"), where("createdBy.uid", "==", user)))
+    const userCommentsQuery = returnCommentsQuery(user);
+    const data = await getDocs(userCommentsQuery)
     const userReplies = data.docs.map(doc => {
       const { 
         createdBy,
@@ -285,6 +308,11 @@ const fetchComments = async (user) => {
   }
 }
 
+const resetQueryLast = () => {
+  currentQueryLastPost = null;
+  currentQueryLastReply = null;
+}
+
 const updatePostUpvote = () => {
   try {
 
@@ -303,4 +331,5 @@ export {
   addReplyToDB,
   fetchReplyFromDB,
   fetchComments,
+  resetQueryLast,
 }

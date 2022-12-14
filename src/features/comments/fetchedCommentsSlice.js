@@ -10,7 +10,6 @@ const fetchedCommentsSlice = createSlice({
             action.payload.forEach(reply => {
                 if (state.every(item => item.replyId !== reply.replyId)) {
                     state.push(reply);
-                    console.log(state);
                 }
             })
         }

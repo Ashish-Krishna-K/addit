@@ -7,14 +7,15 @@ const fetchedPostsSlice = createSlice({
     initialState,
     reducers: {
         fetchedPostsFromDB: (state, action) => {
-            action.payload.forEach(post => {
-                if (state.every(item => item.postId !== post.postId)) {
-                    state.push(post);
-                }
-            })
+            const tempArray = action.payload.filter(post => state.every(item => item.postId !== post.postId))
+            return state.concat(tempArray);
+        },
+        resetStateOnMount: (state) => {
+            console.log('cleared state');
+            return []
         }
     }
 });
 
 export default fetchedPostsSlice.reducer;
-export const { fetchedPostsFromDB } = fetchedPostsSlice.actions;
+export const { fetchedPostsFromDB, resetStateOnMount } = fetchedPostsSlice.actions;
