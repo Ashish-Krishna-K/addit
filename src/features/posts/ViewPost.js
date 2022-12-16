@@ -67,7 +67,8 @@ const ViewPost = () => {
                 }</div>
                 <div>
                         <button data-id={id} onClick={handleReplyButtonClicked}>Reply</button>
-                        {showReplyForm.show && showReplyForm.id === id && <AddReply postId={id} parentType={'post'} parentId={id}/>}
+                        {showReplyForm.show && showReplyForm.id === id &&
+                         <AddReply postId={id} parentType={'post'} parentId={id}/>}
                 </div>
                 <>{repliesArray.map((reply, index) => <Replies id={reply} key={index}/>)}</>
             </div>

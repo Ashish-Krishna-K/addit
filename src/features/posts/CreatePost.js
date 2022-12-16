@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { createNewPost } from "../../app/firebase";
+import { createNewPost, editPostInDB } from "../../app/firebase";
 
 const acceptedFileFormats = '.png, .jpg, .jpeg, .webp'
 
@@ -9,10 +9,31 @@ const CreatePost = () => {
     const [title, setTitle] = useState({ value: '' });
     const [content, setContent] = useState({ value: '' });
     const [uploadImage, setUploadImage] = useState({ value: [] });
+    const [isEdit, setIsEdit] = useState(false);
+    const [idOfPostToEdit, setIdOfPostToEdit] = useState({value: ''});
     const navigate = useNavigate();
     const location = useLocation();
-
-    console.log(location);
+    const postToEdit = location.state;
+    
+    useEffect(() => {
+        if (postToEdit) {
+            console.log(postToEdit);
+            const { postId, postTitle, postContent } = postToEdit
+            setPostType({
+                value: 'text',
+            })
+            setTitle({
+                value: postTitle
+            })
+            setContent({
+                value: postContent.content
+            })
+            setIsEdit(true)
+            setIdOfPostToEdit({
+                value: postId
+            })
+        }
+    }, [location])
 
     const handleTypeChange = (e) => {
         setPostType({
@@ -40,6 +61,15 @@ const CreatePost = () => {
 
     const handleFormSubmit = (e) =>{
         e.preventDefault();
+        if (isEdit) {
+            editPostInDB(idOfPostToEdit, content.value).then(() => {
+                setTitle({ value: '' });
+                setContent({ value: '' });
+                setPostType({ value: 'text'});
+                setUploadImage({ value: [] });
+                navigate(-1);
+            })
+        }
         createNewPost(title.value, postType.value, content.value, uploadImage.value).then(data => {
             setTitle({ value: '' });
             setContent({ value: '' });
@@ -84,6 +114,7 @@ const CreatePost = () => {
                 name="title"
                 id="post-title" 
                 placeholder="Title"
+                value={title.value}
                 onChange={handleTitleInput}
                 />
                 <>
@@ -99,7 +130,8 @@ const CreatePost = () => {
                             /> :
                             <textarea
                             name="content"
-                            id="post-content" 
+                            id="post-content"
+                            value={content.value} 
                             onChange={handleContentInput}
                             /> 
                     }

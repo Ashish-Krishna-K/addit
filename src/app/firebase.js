@@ -342,6 +342,28 @@ const updateReplyUpvote = async (upvotes, id) => {
   }
 }
 
+const editPostInDB = async (id, content) => {
+  try {
+    return await updateDoc(doc(postsCollection, id), {
+      "postContent.content": content
+    })
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const editReplyInDB = async (id, content) => {
+  try {
+    return await updateDoc(doc(commentsCollection, id), {
+      replyContent: content
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
 export {
   signIn,
   logOut,
@@ -355,4 +377,6 @@ export {
   resetQueryLast,
   updatePostUpvote,
   updateReplyUpvote,
+  editPostInDB,
+  editReplyInDB,
 }

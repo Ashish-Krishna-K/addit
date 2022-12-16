@@ -16,3 +16,7 @@
     max-height: 300px;
     overflow: auto;
 }
+
+.display-reply {
+    outline: 1px solid black;
+}

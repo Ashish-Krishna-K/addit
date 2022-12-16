@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { addReplyToDB } from "../../app/firebase";
+import { editReplyInDB } from "../../app/firebase";
 import { replyButtonClicked } from '../comments/showReplyFormSlice';
 
-const AddReply = (props) => {
-    const [replyContent, setReplyContent] = useState({ value: ''});
+const EditReply = ({ id, content }) => {
+    const [replyContent, setReplyContent] = useState({ value: content});
     const dispatch = useDispatch();
     
     const handleInput = (e) => {
@@ -16,9 +16,9 @@ const AddReply = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        addReplyToDB(props.postId, replyContent, props.parentType, props.parentId).then(data => {
+        editReplyInDB(id, replyContent).then(data => {
             setReplyContent({ value: '' });
-            dispatch(replyButtonClicked(e.target.dataset.id));
+            dispatch(replyButtonClicked(''));
             window.location.reload();
         });
     }
@@ -26,7 +26,7 @@ const AddReply = (props) => {
     const handleCancel = (e) => {
         e.preventDefault();
         setReplyContent({ value: '' });
-        dispatch(replyButtonClicked(e.target.dataset.id));
+        dispatch(replyButtonClicked(''));
     }
 
     return (
@@ -34,11 +34,11 @@ const AddReply = (props) => {
             <textarea
             value={replyContent.value}
             onChange={handleInput}
-            ></textarea>
-            <button type="submit">Post</button>
+            />
+            <button type="submit">Save</button>
             <button type="button" onClick={handleCancel}>Cancel</button>
         </form>
     )
 }
 
-export default AddReply
+export default EditReply
