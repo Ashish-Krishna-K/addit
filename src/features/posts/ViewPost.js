@@ -6,6 +6,7 @@ import { fetchSinglePost, downloadImages } from "../../app/firebase";
 import { replyButtonClicked } from '../comments/showReplyFormSlice';
 import AddReply from "../comments/AddReply";
 import Replies from "../comments/Replies";
+import Upvotes from "../upvotes/Upvotes";
 
 const ViewPost = () => {
     const location = useLocation();
@@ -47,14 +48,21 @@ const ViewPost = () => {
     const handleReplyButtonClicked = (e) => {
         dispatch(replyButtonClicked(e.target.dataset.id))
     };
+    
     return (
         <>{ !postTitle ? <p>loading</p> :
             <div>
                 <p>{postTitle}</p>
                 <Link to="/profile" state={createdBy.uid}>{createdBy.displayName}</Link>
-                <p>{postUpvotes}</p>
+                <Upvotes upvotes={postUpvotes} type={'post'} id={id}/>
                 <div>{
-                    postContent.type === 'text' ? <p>{postContent.content}</p> : 
+                    postContent.type === 'text' ? 
+                    <div> 
+                        <Link to="/createpost" state={activePost}>
+                            <button>edit</button>
+                        </Link>
+                        <p>{postContent.content}</p>
+                    </div>: 
                     postImages.map(image => <img src={image} alt="Post" key={image} />)
                 }</div>
                 <div>

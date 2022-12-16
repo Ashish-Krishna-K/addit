@@ -18,8 +18,8 @@ const CurrentUser = () => {
             <button onClick={handleLogin}>Login</button>
             {
                 user.displayName === null ? 
-                <Link to="/profile"> Welcome, Anonymous user</Link> :
-                <Link to="/profile">
+                <p> Welcome, Anonymous user</p> :
+                <Link to="/profile" state={{ user }}>
                     <p>Welcome, {user.displayName}</p>
                     <img src={user.photoURL} alt={user.displayName} />
                 </Link>

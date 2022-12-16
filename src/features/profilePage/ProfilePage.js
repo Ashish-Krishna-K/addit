@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useLocation } from "react-router-dom";
 import UserPosts from "./UserPosts";
 import UserReplies from "./UserComments";
 
 import { resetStateOnMount } from "../posts/fetchedPostsSlice";
 
 const ProfilePage = () => {
-    const user = useSelector(state => state.loggedInUser);
+    const location = useLocation();
+    const { user } = location.state;
     const dispatch = useDispatch();
     const [viewItems, setViewItems] = useState({ value: 'posts' })
 
@@ -23,8 +25,8 @@ const ProfilePage = () => {
                 <button data-type='posts' onClick={handleViewButtonClick}>Posts</button>
                 <button data-type='comments' onClick={handleViewButtonClick}>Comments</button>
             </div>
-            {viewItems.value === 'posts' && <UserPosts />}
-            {viewItems.value === 'comments' && <UserReplies />}
+            {viewItems.value === 'posts' && <UserPosts userId={user.uid}/>}
+            {viewItems.value === 'comments' && <UserReplies userId={user.uid}/>}
         </div>    
     )
 }

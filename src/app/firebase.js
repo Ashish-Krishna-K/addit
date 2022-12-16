@@ -36,7 +36,8 @@ const activeUser = {
   uid: null,
 }
 
-let currentQueryLastPost = null;
+let homePageCurrentQueryLastPost = null;
+let userPageCurrentQueryLastPost = null;
 let currentQueryLastReply = null;
 
 const signIn = async () => {
@@ -78,7 +79,8 @@ const createNewPost = async (title, type, content, image) => {
       postUpvotes: 0,
       repliesArray: [],
     })
-    console.log('postAdded')
+    console.log('postAdded');
+    return addPost;
   } else {
     const addPost = await addDoc(postsCollection, {
       createdBy: Object.assign(activeUser),
@@ -88,11 +90,13 @@ const createNewPost = async (title, type, content, image) => {
       postUpvotes: 0,
       repliesArray: [],
     });
-    console.log('postAdded')
+    console.log('postAdded');
     for (const file of image) {
       uploadImages(file, addPost.id, type)
     }
+    return addPost;
   }
+  
 }
 
 const uploadImages = async (file, docId, type) => {
@@ -113,12 +117,12 @@ const uploadImages = async (file, docId, type) => {
 } 
 
 const returnHomePostsQuery = () => {
-  return currentQueryLastPost ? query(postsCollection, orderBy("createdAt", 'desc'), startAfter(currentQueryLastPost), limit(10)) :
+  return homePageCurrentQueryLastPost ? query(postsCollection, orderBy("createdAt", 'desc'), startAfter(homePageCurrentQueryLastPost), limit(10)) :
   query(postsCollection, orderBy("createdAt", 'desc'), limit(10))
 }
 
 const returnUserPostsQuery = (user) => {
-  return currentQueryLastPost ? query(postsCollection, orderBy("createdAt", "desc"), startAfter(currentQueryLastPost), where("createdBy.uid", "==", user), limit(10)) :
+  return userPageCurrentQueryLastPost ? query(postsCollection, orderBy("createdAt", "desc"), startAfter(userPageCurrentQueryLastPost), where("createdBy.uid", "==", user), limit(10)) :
   query(postsCollection, orderBy("createdAt", "desc"), where("createdBy.uid", "==", user), limit(10))
 }
 
@@ -152,8 +156,9 @@ const fetchPosts = async (user) => {
           repliesArray
         } 
       });
+      console.log(posts);
       store.dispatch(fetchedPostsFromDB(posts));
-      currentQueryLastPost = data.docs.pop();
+      homePageCurrentQueryLastPost = data.docs.pop();
       console.log('fetched posts for home page');
     } else {
       const userPageQuery = returnUserPostsQuery(user);
@@ -179,7 +184,8 @@ const fetchPosts = async (user) => {
         } 
       });
       store.dispatch(fetchedPostsFromDB(userPosts));
-      console.log('fetched posts for user page')
+      userPageCurrentQueryLastPost = data.docs.pop();
+      console.log('fetched posts for user page');
     }
   } catch(error) {
     console.log(error)
@@ -219,7 +225,7 @@ const addReplyToDB = async (postId, content, parentType, parentId) => {
     });
     console.log('comment created');
     await updateReplyInParentOnDB(parentType, parentId, addReply.id);
-    window.location.reload();
+    return addReply;
   } catch (error) {
     console.log(error)
   }
@@ -309,15 +315,30 @@ const fetchComments = async (user) => {
 }
 
 const resetQueryLast = () => {
-  currentQueryLastPost = null;
+  homePageCurrentQueryLastPost = null;
+  userPageCurrentQueryLastPost = null;
   currentQueryLastReply = null;
 }
 
-const updatePostUpvote = () => {
+const updatePostUpvote = async (upvotes, id) => {
   try {
-
+    const updateUpvote = await updateDoc(doc(postsCollection, id), {
+      postUpvotes: upvotes
+    })
+    return updateUpvote
   } catch (error) {
+    console.log(error);
+  }
+}
 
+const updateReplyUpvote = async (upvotes, id) => {
+  try {
+    const updateUpvote = await updateDoc(doc(commentsCollection, id), {
+      replyUpvotes: upvotes
+    });
+    return updateUpvote
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -332,4 +353,6 @@ export {
   fetchReplyFromDB,
   fetchComments,
   resetQueryLast,
+  updatePostUpvote,
+  updateReplyUpvote,
 }

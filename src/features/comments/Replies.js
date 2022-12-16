@@ -6,6 +6,7 @@ import { fetchReplyFromDB } from "../../app/firebase";
 import { replyButtonClicked } from '../comments/showReplyFormSlice'
 
 import AddReply from "../comments/AddReply";
+import Upvotes from "../upvotes/Upvotes";
 
 
 const Replies = ({id}) => {
@@ -36,7 +37,7 @@ const Replies = ({id}) => {
         <div>{replyContent &&
             <>
                 <Link to="/profile" state={createdBy.uid}>{createdBy.displayName}</Link>
-                <p>{replyUpvotes}</p>
+                <Upvotes upvotes={replyUpvotes} type={'reply'} id={id}/>
                 <p>{replyContent.value}</p>
                 <p>replies: {repliesArray.length}</p>
                 <div>

@@ -1,26 +1,25 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { fetchPosts } from "../../app/firebase";
 
 import PostView from "../posts/PostTitlesView";
 
-const UserPosts = () => {
-    const location = useLocation();
+const UserPosts = ({ userId }) => {
     const fetchedPosts = useSelector(state => state.fetchedPosts);
-    const user = useSelector(state => state.loggedInUser);
 
     useEffect(() => {
-        if (!location.state) {
-            fetchPosts(user.uid);
-        } else {
-            const { userId } = location.state;
-            fetchPosts(userId);
-        }
+        fetchPosts(userId);
     }, [])
 
+    const handleScroll = (e) => {
+        const container = e.target;
+        if (container.scrollTop + container.offsetHeight === container.scrollHeight) {
+            fetchPosts(userId);
+        };
+    }
+
     return (
-        <div id="user-posts">{
+        <div id="user-posts" className="post-title-container" onScroll={handleScroll}>{
             fetchedPosts.length < 1 ? <p>Loading</p> :
             fetchedPosts.map(post => <PostView post={post} key={post.postId} />) 
         }</div>

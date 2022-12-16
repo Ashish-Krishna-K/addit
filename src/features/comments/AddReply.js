@@ -16,9 +16,11 @@ const AddReply = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        addReplyToDB(props.postId, replyContent, props.parentType, props.parentId);
-        setReplyContent({ value: '' });
-        dispatch(replyButtonClicked(e.target.dataset.id));
+        addReplyToDB(props.postId, replyContent, props.parentType, props.parentId).then(data => {
+            setReplyContent({ value: '' });
+            dispatch(replyButtonClicked(e.target.dataset.id));
+            window.location.reload();
+        });
     }
 
     const handleCancel = (e) => {

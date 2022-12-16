@@ -1,15 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Upvotes from "../upvotes/Upvotes";
 
 const PostView = ({ post }) => {
     return (
-        <Link to="/viewpost" state={{id: post.postId}}>
-            <div className="post-title-view">
-                <p>upvotes: {post.postUpvotes}</p>
-                <p>{post.postTitle}</p>
+        <div className="post-title-view">
+                <Upvotes upvotes={post.postUpvotes} type={'post'} id={post.postId} />
+                <Link to="/viewpost" state={{id: post.postId}}>{post.postTitle}</Link>
                 <p>replies: {post.repliesArray.length}</p>
-            </div>
-        </Link>
+        </div>
     )
 }
 

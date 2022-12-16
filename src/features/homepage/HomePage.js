@@ -16,8 +16,11 @@ const HomePage = () => {
     }, [])
 
     const handleScroll = (e) => {
-        console.log('scrolling');
-        console.log(e)
+        const container = e.target;
+        if (container.scrollTop + container.offsetHeight === container.scrollHeight) {
+            fetchPosts()
+        };
+
     }
 
     return (

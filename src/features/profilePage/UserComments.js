@@ -1,26 +1,25 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { fetchComments } from "../../app/firebase";
 
 import ReplyView from "../comments/ReplyView";
 
-const UserReplies = () => {
-    const location = useLocation();
+const UserReplies = ({ userId }) => {
     const fetchedComments = useSelector(state => state.fetchedComments);
-    const user = useSelector(state => state.loggedInUser);
 
     useEffect(() => {
-        if (!location.state) {
-            fetchComments(user.uid);
-        } else {
-            const { userId } = location.state;
-            fetchComments(userId);
-        }
-    }, [])
+        fetchComments(userId);
+    }, []);
+
+    const handleScroll = (e) => {
+        const container = e.target;
+        if (container.scrollTop + container.offsetHeight === container.scrollHeight) {
+            fetchComments(userId)
+        };
+    }
 
     return (
-            <div id="user-replies">{ 
+            <div id="user-replies" className="reply-container" onScroll={handleScroll}>{ 
                 fetchedComments.length < 1 ? <p>Loading</p> :
                 fetchedComments.map(comment => <ReplyView reply={comment} key={comment.replyId} />) 
             }</div>

@@ -1,9 +1,18 @@
-.post-title-view {
+.post-title-view,
+.reply-view {
     border: 1px solid black;
     text-decoration: none;
+    height: 200px;
+
+    display: flex;
 }
 
 .post-title-container {
+    max-height: 300px;
+    overflow: auto;
+}
+
+.reply-container {
     max-height: 300px;
     overflow: auto;
 }

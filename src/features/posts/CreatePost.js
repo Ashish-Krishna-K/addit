@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { createNewPost } from "../../app/firebase";
 
 const acceptedFileFormats = '.png, .jpg, .jpeg, .webp'
@@ -10,7 +10,10 @@ const CreatePost = () => {
     const [content, setContent] = useState({ value: '' });
     const [uploadImage, setUploadImage] = useState({ value: [] });
     const navigate = useNavigate();
-    
+    const location = useLocation();
+
+    console.log(location);
+
     const handleTypeChange = (e) => {
         setPostType({
             value: e.target.value, 
@@ -37,12 +40,13 @@ const CreatePost = () => {
 
     const handleFormSubmit = (e) =>{
         e.preventDefault();
-        createNewPost(title.value, postType.value, content.value, uploadImage.value);
-        setTitle({ value: '' });
-        setContent({ value: '' });
-        setPostType({ value: 'text'});
-        setUploadImage({ value: [] });
-        navigate('/');
+        createNewPost(title.value, postType.value, content.value, uploadImage.value).then(data => {
+            setTitle({ value: '' });
+            setContent({ value: '' });
+            setPostType({ value: 'text'});
+            setUploadImage({ value: [] });
+            navigate('/');
+        });
     }
 
     const handleCancel = (e) => {
