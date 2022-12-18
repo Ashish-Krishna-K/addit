@@ -13,6 +13,7 @@ const UserReplies = ({ userId }) => {
 
     const handleScroll = (e) => {
         const container = e.target;
+        console.log(container);
         if (container.scrollTop + container.offsetHeight === container.scrollHeight) {
             fetchComments(userId)
         };

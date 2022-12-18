@@ -1,7 +1,34 @@
 import { initializeApp } from "firebase/app";
-import { GoogleAuthProvider, getAuth, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
-import { getFirestore, addDoc, doc, collection, serverTimestamp, deleteDoc, updateDoc, arrayUnion, query, orderBy, startAfter, getDocs, where, getDoc, limit, getCountFromServer  } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { 
+  GoogleAuthProvider, 
+  getAuth, 
+  signInWithPopup, 
+  onAuthStateChanged, 
+  signOut 
+} from "firebase/auth";
+import { 
+  getFirestore, 
+  addDoc, 
+  doc, 
+  collection, 
+  serverTimestamp, 
+  deleteDoc, 
+  updateDoc, 
+  arrayUnion, 
+  query, 
+  orderBy, 
+  startAfter, 
+  getDocs, 
+  where, 
+  getDoc, 
+  limit,
+} from "firebase/firestore";
+import { 
+  getDownloadURL, 
+  getStorage, 
+  ref, 
+  uploadBytes 
+} from "firebase/storage";
 
 import store from './store';
 
@@ -76,7 +103,7 @@ const createNewPost = async (title, type, content, image) => {
       createdAt: serverTimestamp(),
       postTitle: title,
       postContent: { type, content },
-      postUpvotes: 0,
+      upvotes: { value: 0, upvotedUsers: [], downvotedUsers: []},
       repliesArray: [],
     })
     console.log('postAdded');
@@ -87,7 +114,7 @@ const createNewPost = async (title, type, content, image) => {
       createdAt: serverTimestamp(),
       postTitle: title,
       postContent: {},
-      postUpvotes: 0,
+      upvotes: { value: 0, upvotedUsers: [], downvotedUsers: []},
       repliesArray: [],
     });
     console.log('postAdded');
@@ -117,17 +144,20 @@ const uploadImages = async (file, docId, type) => {
 } 
 
 const returnHomePostsQuery = () => {
-  return homePageCurrentQueryLastPost ? query(postsCollection, orderBy("createdAt", 'desc'), startAfter(homePageCurrentQueryLastPost), limit(10)) :
+  return homePageCurrentQueryLastPost ? 
+  query(postsCollection, orderBy("createdAt", 'desc'), startAfter(homePageCurrentQueryLastPost), limit(10)) :
   query(postsCollection, orderBy("createdAt", 'desc'), limit(10))
 }
 
 const returnUserPostsQuery = (user) => {
-  return userPageCurrentQueryLastPost ? query(postsCollection, orderBy("createdAt", "desc"), startAfter(userPageCurrentQueryLastPost), where("createdBy.uid", "==", user), limit(10)) :
+  return userPageCurrentQueryLastPost ? 
+  query(postsCollection, orderBy("createdAt", "desc"), startAfter(userPageCurrentQueryLastPost), where("createdBy.uid", "==", user), limit(10)) :
   query(postsCollection, orderBy("createdAt", "desc"), where("createdBy.uid", "==", user), limit(10))
 }
 
 const returnCommentsQuery = (user) => {
-  return currentQueryLastReply ? query(commentsCollection, orderBy("createdAt", "desc"), startAfter(currentQueryLastReply), where("createdBy.uid", "==", user), limit(10)) :
+  return currentQueryLastReply ? 
+  query(commentsCollection, orderBy("createdAt", "desc"), startAfter(currentQueryLastReply), where("createdBy.uid", "==", user), limit(10)) :
   query(commentsCollection, orderBy("createdAt", "desc"), where("createdBy.uid", "==", user), limit(10))
 }
 
@@ -143,7 +173,7 @@ const fetchPosts = async (user) => {
           createdAt, 
           postTitle,
           postContent,
-          postUpvotes,
+          upvotes,
           repliesArray,  
         } = doc.data()
         return {
@@ -152,11 +182,10 @@ const fetchPosts = async (user) => {
           createdAt: createdAt.toDate().toDateString(),
           postTitle,
           postContent,
-          postUpvotes,
+          upvotes,
           repliesArray
         } 
       });
-      console.log(posts);
       store.dispatch(fetchedPostsFromDB(posts));
       homePageCurrentQueryLastPost = data.docs.pop();
       console.log('fetched posts for home page');
@@ -169,7 +198,7 @@ const fetchPosts = async (user) => {
           createdAt, 
           postTitle,
           postContent,
-          postUpvotes,
+          upvotes,
           repliesArray,  
         } = doc.data()
 
@@ -179,7 +208,7 @@ const fetchPosts = async (user) => {
           createdAt: createdAt.toDate().toDateString(),
           postTitle,
           postContent,
-          postUpvotes,
+          upvotes,
           repliesArray
         } 
       });
@@ -220,7 +249,7 @@ const addReplyToDB = async (postId, content, parentType, parentId) => {
       parentPost: postId,
       parent: { parentType, parentId },
       replyContent: content,
-      replyUpvotes: 0,
+      upvotes: { value: 0, upvotedUsers: [], downvotedUsers: []},
       repliesArray: [],
     });
     console.log('comment created');
@@ -258,7 +287,7 @@ const fetchReplyFromDB = async (replyId) => {
           parentPost,
           parent,
           replyContent,
-          replyUpvotes,
+          upvotes,
           repliesArray,
       } = fetchedData.data()
       console.log('reply fetched')
@@ -269,7 +298,7 @@ const fetchReplyFromDB = async (replyId) => {
           parentPost,
           parent,
           replyContent,
-          replyUpvotes,
+          upvotes,
           repliesArray,
       }
     } else {
@@ -292,7 +321,7 @@ const fetchComments = async (user) => {
         parentPost,
         parent,
         replyContent,
-        replyUpvotes,
+        upvotes,
         repliesArray,  
       } = doc.data()
 
@@ -303,11 +332,12 @@ const fetchComments = async (user) => {
         parentPost,
         parent,
         replyContent,
-        replyUpvotes,
+        upvotes,
         repliesArray
       } 
     });
     store.dispatch(fetchedCommentsFromDB(userReplies));
+    currentQueryLastReply = data.docs.pop();
     console.log('fetched comments for user page')
   } catch (error) {
     console.log(error);
@@ -318,12 +348,16 @@ const resetQueryLast = () => {
   homePageCurrentQueryLastPost = null;
   userPageCurrentQueryLastPost = null;
   currentQueryLastReply = null;
+
+  console.log('all lastQuery variables is reset');
 }
 
-const updatePostUpvote = async (upvotes, id) => {
+const updatePostUpvotes = async (value, upvotes, downvotes, id) => {
   try {
     const updateUpvote = await updateDoc(doc(postsCollection, id), {
-      postUpvotes: upvotes
+      "upvotes.value": value,
+      "upvotes.upvotedUsers": upvotes,
+      "upvotes.downvotedUsers": downvotes,
     })
     return updateUpvote
   } catch (error) {
@@ -331,11 +365,13 @@ const updatePostUpvote = async (upvotes, id) => {
   }
 }
 
-const updateReplyUpvote = async (upvotes, id) => {
+const updateReplyUpvote = async (value, upvotes, downvotes, id) => {
   try {
     const updateUpvote = await updateDoc(doc(commentsCollection, id), {
-      replyUpvotes: upvotes
-    });
+      "upvotes.value": value,
+      "upvotes.upvotedUsers": upvotes,
+      "upvotes.downvotedUsers": downvotes,
+    })
     return updateUpvote
   } catch (error) {
     console.log(error);
@@ -375,7 +411,7 @@ export {
   fetchReplyFromDB,
   fetchComments,
   resetQueryLast,
-  updatePostUpvote,
+  updatePostUpvotes,
   updateReplyUpvote,
   editPostInDB,
   editReplyInDB,

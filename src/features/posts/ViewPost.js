@@ -11,6 +11,7 @@ import Upvotes from "../upvotes/Upvotes";
 const ViewPost = () => {
     const location = useLocation();
     const showReplyForm = useSelector(state => state.showReplyForm);
+    const user = useSelector(state => state.loggedInUser);
     const { id } = location.state;
     const [activePost, setActivePost] = useState({});
     const [postImages, setPostImages] = useState([]);
@@ -27,7 +28,7 @@ const ViewPost = () => {
         createdAt,
         postTitle,
         postContent,
-        postUpvotes,
+        upvotes,
         repliesArray
     } = activePost
 
@@ -53,14 +54,14 @@ const ViewPost = () => {
         <>{ !postTitle ? <p>loading</p> :
             <div>
                 <p>{postTitle}</p>
-                <Link to="/profile" state={createdBy.uid}>{createdBy.displayName}</Link>
-                <Upvotes upvotes={postUpvotes} type={'post'} id={id}/>
+                <Link to="/profile" state={createdBy}>{createdBy.displayName}</Link>
+                <Upvotes upvotes={upvotes} type={'post'} id={id}/>
                 <div>{
                     postContent.type === 'text' ? 
-                    <div> 
-                        <Link to="/createpost" state={activePost}>
+                    <div>
+                        {createdBy.uid === user.uid && <Link to="/createpost" state={activePost}>
                             <button>edit</button>
-                        </Link>
+                        </Link>}
                         <p>{postContent.content}</p>
                     </div>: 
                     postImages.map(image => <img src={image} alt="Post" key={image} />)

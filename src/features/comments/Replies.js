@@ -12,8 +12,8 @@ import EditReply from "./EditReply";
 
 const Replies = ({id}) => {
     const [fetchedReply, setFetchedReply] = useState({});
-    const [replyToEdit, setReplyToEdit] = useState({ value: '' })
     const showReplyForm = useSelector(state => state.showReplyForm);
+    const user = useSelector(state => state.loggedInUser);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -29,7 +29,7 @@ const Replies = ({id}) => {
         parentPost,
         parent,
         replyContent,
-        replyUpvotes,
+        upvotes,
         repliesArray,
     } = fetchedReply
 
@@ -45,12 +45,12 @@ const Replies = ({id}) => {
             {replyContent &&
                 <>
                     <Link to="/profile" state={createdBy.uid}>{createdBy.displayName}</Link>
-                    <Upvotes upvotes={replyUpvotes} type={'reply'} id={id}/>
+                    <Upvotes upvotes={upvotes} type={'reply'} id={id}/>
                     {showReplyForm.show && showReplyForm.id === `${replyId}edit` ? 
                     <EditReply id={id} content={replyContent.value}/> :
                     <>
                         <p>{replyContent.value}</p>
-                        <button type="button" data-id={replyId} data-type="edit" onClick={handleReplyButtonClicked}>Edit</button>
+                        {createdAt.uid === user.uid && <button type="button" data-id={replyId} data-type="edit" onClick={handleReplyButtonClicked}>Edit</button>}
                     </>}
                     <p>replies: {repliesArray.length}</p>
                     <div>

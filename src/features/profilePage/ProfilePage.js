@@ -8,7 +8,7 @@ import { resetStateOnMount } from "../posts/fetchedPostsSlice";
 
 const ProfilePage = () => {
     const location = useLocation();
-    const { user } = location.state;
+    const user = location.state;
     const dispatch = useDispatch();
     const [viewItems, setViewItems] = useState({ value: 'posts' })
 
@@ -17,10 +17,10 @@ const ProfilePage = () => {
     }
 
     useEffect(() => {dispatch(resetStateOnMount())}, [])
-
+    
     return (
-        <div>
-            <div>
+        <div id="profile-page">
+            <div id="user-details">
                 <p>{user.displayName}</p>
                 <button data-type='posts' onClick={handleViewButtonClick}>Posts</button>
                 <button data-type='comments' onClick={handleViewButtonClick}>Comments</button>

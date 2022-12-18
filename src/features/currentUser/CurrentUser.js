@@ -14,18 +14,18 @@ const CurrentUser = () => {
     }
 
     return (
-        <>
-            <button onClick={handleLogin}>Login</button>
+        <div id='current-user-display'>
             {
                 user.displayName === null ? 
                 <p> Welcome, Anonymous user</p> :
-                <Link to="/profile" state={{ user }}>
+                <Link to="/profile" state={user}>
                     <p>Welcome, {user.displayName}</p>
                     <img src={user.photoURL} alt={user.displayName} />
                 </Link>
             }
+            <button onClick={handleLogin}>Login</button>
             <button onClick={handleLogout}>Logout</button>
-        </>
+        </div>
     )
 }
 
