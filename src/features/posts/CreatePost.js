@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { createNewPost, editPostInDB } from "../../app/firebase";
+import { useSelector } from "react-redux";
 
 const acceptedFileFormats = '.png, .jpg, .jpeg, .webp'
 
@@ -11,13 +12,13 @@ const CreatePost = () => {
     const [uploadImage, setUploadImage] = useState({ value: [] });
     const [isEdit, setIsEdit] = useState(false);
     const [idOfPostToEdit, setIdOfPostToEdit] = useState({value: ''});
+    const activeUser = useSelector(state => state.loggedInUser);
     const navigate = useNavigate();
     const location = useLocation();
     const postToEdit = location.state;
     
     useEffect(() => {
         if (postToEdit) {
-            console.log(postToEdit);
             const { postId, postTitle, postContent } = postToEdit
             setPostType({
                 value: 'text',
@@ -62,21 +63,22 @@ const CreatePost = () => {
     const handleFormSubmit = (e) =>{
         e.preventDefault();
         if (isEdit) {
-            editPostInDB(idOfPostToEdit, content.value).then(() => {
+            editPostInDB(idOfPostToEdit.value, content.value).then(() => {
                 setTitle({ value: '' });
                 setContent({ value: '' });
                 setPostType({ value: 'text'});
                 setUploadImage({ value: [] });
                 navigate(-1);
             })
+        } else {
+            createNewPost(title.value, postType.value, content.value, uploadImage.value).then(data => {
+                setTitle({ value: '' });
+                setContent({ value: '' });
+                setPostType({ value: 'text'});
+                setUploadImage({ value: [] });
+                navigate('/');
+            });
         }
-        createNewPost(title.value, postType.value, content.value, uploadImage.value).then(data => {
-            setTitle({ value: '' });
-            setContent({ value: '' });
-            setPostType({ value: 'text'});
-            setUploadImage({ value: [] });
-            navigate('/');
-        });
     }
 
     const handleCancel = (e) => {
@@ -89,61 +91,65 @@ const CreatePost = () => {
     }
     
     return (
-        <form onSubmit={handleFormSubmit}>
-            <div>
-                <button 
-                type="button" 
-                value="text" 
-                onClick={handleTypeChange}
-                >
-                    Text
-                </button>
+        <>{activeUser.displayName ? 
+            <form id="create-post-form" onSubmit={handleFormSubmit}>
+                <div id="type-select">
+                    <button 
+                    type="button" 
+                    value="text" 
+                    onClick={handleTypeChange}
+                    >
+                        Text
+                    </button>
 
-                <button 
-                type="button" 
-                value="image" 
-                onClick={handleTypeChange}
-                >
-                    Image
-                </button>
+                    <button 
+                    type="button" 
+                    value="image" 
+                    onClick={handleTypeChange}
+                    >
+                        Image
+                    </button>
 
-            </div>
-            <>
-                <input 
-                type="text" 
-                name="title"
-                id="post-title" 
-                placeholder="Title"
-                value={title.value}
-                onChange={handleTitleInput}
-                />
+                </div>
                 <>
-                    {
-                        postType.value === 'image' ?
-                            <input 
-                            type="file" 
-                            multiple
-                            name="image[]"
-                            id="post-image" 
-                            accept={acceptedFileFormats}
-                            onChange={handleImageInput}
-                            /> :
-                            <textarea
-                            name="content"
-                            id="post-content"
-                            value={content.value} 
-                            onChange={handleContentInput}
-                            /> 
-                    }
+                    <input 
+                    type="text" 
+                    name="title"
+                    id="post-title" 
+                    placeholder="Title"
+                    value={title.value}
+                    onChange={handleTitleInput}
+                    />
+                    <>
+                        {
+                            postType.value === 'image' ?
+                                <input 
+                                type="file" 
+                                multiple
+                                name="image[]"
+                                id="post-image" 
+                                accept={acceptedFileFormats}
+                                onChange={handleImageInput}
+                                /> :
+                                <textarea
+                                name="content"
+                                id="post-content"
+                                value={content.value} 
+                                onChange={handleContentInput}
+                                /> 
+                        }
+                    </>
                 </>
-            </>
 
-            <>
-                <button type="button" onClick={handleCancel}>Cancel</button>
-                <button type="submit">Post</button>
-            </>
+                <div id="form-controls">
+                    <button type="button" onClick={handleCancel}>Cancel</button>
+                    <button type="submit">Post</button>
+                </div>
 
-        </form>
+            </form> :
+
+            <h2>You need to login to create a new post</h2>
+        }</>
     )
 }
 

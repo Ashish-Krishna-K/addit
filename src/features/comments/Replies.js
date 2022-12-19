@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { fetchReplyFromDB } from "../../app/firebase";
+import { fetchReplyFromDB, deleteCommentFromDB } from "../../app/firebase";
 import { replyButtonClicked } from '../comments/showReplyFormSlice'
 
 import AddReply from "../comments/AddReply";
@@ -39,26 +39,40 @@ const Replies = ({id}) => {
         dispatch(replyButtonClicked(`${e.target.dataset.id}edit`))
     };
 
+    const deleteButtonClicked = () => {
+        deleteCommentFromDB(id).then(() => {
+            window.location.reload();
+        })
+    }
     
     return(
         <div className="display-reply">
             {replyContent &&
                 <>
-                    <Link to="/profile" state={createdBy.uid}>{createdBy.displayName}</Link>
-                    <Upvotes upvotes={upvotes} type={'reply'} id={id}/>
-                    {showReplyForm.show && showReplyForm.id === `${replyId}edit` ? 
-                    <EditReply id={id} content={replyContent.value}/> :
-                    <>
-                        <p>{replyContent.value}</p>
-                        {createdAt.uid === user.uid && <button type="button" data-id={replyId} data-type="edit" onClick={handleReplyButtonClicked}>Edit</button>}
-                    </>}
-                    <p>replies: {repliesArray.length}</p>
-                    <div>
-                            <button data-id={replyId} data-type="new" onClick={handleReplyButtonClicked}>Reply</button>
+                    <div className="active-reply">
+                        <Upvotes upvotes={upvotes} type={'reply'} id={id}/>
+                        <div className="reply-content">
+                            <Link to="/profile" state={createdBy} key={createdBy.uid}>{createdBy.displayName}</Link>
+                            <span>{showReplyForm.show && showReplyForm.id === `${replyId}edit` ? 
+                            <EditReply id={id} content={replyContent.value}/> :
+                            <>
+                                <p>{replyContent.value}</p>
+                                {createdBy.uid === user.uid && 
+                                <>
+                                 <button type="button" data-id={replyId} data-type="edit" onClick={handleReplyButtonClicked}>Edit</button>
+                                 <button type="button" onClick={deleteButtonClicked}>Delete</button>
+                                </>
+                                }
+                            </>}</span>
+                        </div>
+                        <div>
+                            <p>replies: {repliesArray.length}</p>
+                            {user.displayName && <button data-id={replyId} data-type="new" onClick={handleReplyButtonClicked}>Reply</button>}
                             {showReplyForm.show && showReplyForm.id === replyId &&
                                 <AddReply postId={parentPost} parentType={'comment'} parentId={replyId}/>}
+                        </div>
                     </div>
-                    <>{repliesArray.map((reply, index) => <Replies id={reply} key={index}/>)}</>
+                    <div className="nested-replies">{repliesArray.map((reply, index) => <Replies id={reply} key={index}/>)}</div>
                 </>
             }
         </div>

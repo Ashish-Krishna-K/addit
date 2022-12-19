@@ -13,18 +13,24 @@ const CurrentUser = () => {
         logOut();
     }
 
+    const handleClick = () => {
+        // window.location.reload();
+    }
+
     return (
         <div id='current-user-display'>
             {
                 user.displayName === null ? 
                 <p> Welcome, Anonymous user</p> :
-                <Link to="/profile" state={user}>
+                <Link to="/profile" state={user} key={user.uid} id="loggedin-user" onClick={handleClick}>
+                    <img src={user.photoURL} alt={user.displayName}/>
                     <p>Welcome, {user.displayName}</p>
-                    <img src={user.photoURL} alt={user.displayName} />
                 </Link>
             }
-            <button onClick={handleLogin}>Login</button>
-            <button onClick={handleLogout}>Logout</button>
+            <div id='login-buttons'>
+                <button onClick={handleLogin}>Login</button>
+                <button onClick={handleLogout}>Logout</button>
+            </div>
         </div>
     )
 }

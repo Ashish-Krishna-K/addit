@@ -11,8 +11,13 @@ const Upvotes = ({ upvotes, type, id }) => {
     const { value, upvotedUsers, downvotedUsers } = upvotes;
 
     useEffect(() => {
-        setUserHasUpvoted(upvotedUsers.includes(user.uid));
-        setUserHasDownvoted(downvotedUsers.includes(user.uid));
+        if (user.uid) {
+            setUserHasUpvoted(upvotedUsers.includes(user.uid));
+            setUserHasDownvoted(downvotedUsers.includes(user.uid));
+        } else {
+            setUserHasUpvoted(true);
+            setUserHasDownvoted(true);
+        }
     })
 
     const handleUpvoteClick = () => {
@@ -29,7 +34,7 @@ const Upvotes = ({ upvotes, type, id }) => {
 
     const handleDownvoteClick = () => {
         const newUpvote = upvotes.value - 1;
-        const newDownvoteArray = upvotedUsers.concat(user.uid);
+        const newDownvoteArray = downvotedUsers.concat(user.uid);
         const newUpvoteArray = upvotedUsers.filter(id => id !== user.uid);
 
         if (type === 'post') {
@@ -44,12 +49,16 @@ const Upvotes = ({ upvotes, type, id }) => {
             <button 
             type="button" 
             className={userHasUpvoted ? 'voted' : ''}
-            onClick={handleUpvoteClick}>Upvote</button>
+            onClick={handleUpvoteClick}>
+                up
+            </button>
             <p>{value}</p>
             <button 
             type="button" 
             className={userHasDownvoted ? 'voted' : ''}
-            onClick={handleDownvoteClick}>Downvote</button>
+            onClick={handleDownvoteClick}>
+                down
+            </button>
         </div>
     )
 

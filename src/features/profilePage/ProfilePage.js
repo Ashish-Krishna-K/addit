@@ -5,21 +5,28 @@ import UserPosts from "./UserPosts";
 import UserReplies from "./UserComments";
 
 import { resetStateOnMount } from "../posts/fetchedPostsSlice";
+import { resetQueryLast } from "../../app/firebase";
+import { resetCommentStateOnMount } from "../comments/fetchedCommentsSlice";
 
 const ProfilePage = () => {
     const location = useLocation();
     const user = location.state;
     const dispatch = useDispatch();
-    const [viewItems, setViewItems] = useState({ value: 'posts' })
+    const [viewItems, setViewItems] = useState({ value: 'posts' });
 
     const handleViewButtonClick = (e) => {
         setViewItems({ value: e.target.dataset.type })
     }
 
-    useEffect(() => {dispatch(resetStateOnMount())}, [])
+    useEffect(() => {
+        dispatch(resetStateOnMount());
+        dispatch(resetCommentStateOnMount());
+        resetQueryLast();
+    }, [location]);
+
     
     return (
-        <div id="profile-page">
+        <div id="profile-page" key={user.uid}>
             <div id="user-details">
                 <p>{user.displayName}</p>
                 <button data-type='posts' onClick={handleViewButtonClick}>Posts</button>

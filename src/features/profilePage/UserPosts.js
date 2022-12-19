@@ -10,6 +10,7 @@ const UserPosts = ({ userId }) => {
     useEffect(() => {
         fetchPosts(userId);
     }, [])
+    
 
     const handleScroll = (e) => {
         const container = e.target;

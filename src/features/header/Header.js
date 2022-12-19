@@ -4,12 +4,9 @@ import CurrentUser from "../currentUser/CurrentUser";
 
 
 const Header = () => {
-    const handleHomeClick = (e) => {
-        resetQueryLast();
-    }
     return (
         <header>
-            <Link to="/" onClick={handleHomeClick}>
+            <Link to="/">
                 <h1>ADDIT</h1>
             </Link>
             <Link to="/createpost" >

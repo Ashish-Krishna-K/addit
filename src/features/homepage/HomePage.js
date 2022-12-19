@@ -11,9 +11,7 @@ const HomePage = () => {
 
     useEffect(() => {
         dispatch(resetStateOnMount());
-    }, [])
-
-    useEffect(() => {
+        resetQueryLast();
         fetchPosts();
     }, [])
 
@@ -23,7 +21,6 @@ const HomePage = () => {
             fetchPosts()
         };
     }
-
     return (
         <div className="post-title-container" onScroll={handleScroll}>
             {

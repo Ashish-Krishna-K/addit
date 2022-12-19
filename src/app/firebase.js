@@ -151,18 +151,17 @@ const returnHomePostsQuery = () => {
 
 const returnUserPostsQuery = (user) => {
   return userPageCurrentQueryLastPost ? 
-  query(postsCollection, orderBy("createdAt", "desc"), startAfter(userPageCurrentQueryLastPost), where("createdBy.uid", "==", user), limit(10)) :
+  query(postsCollection, orderBy("createdAt", "desc"), where("createdBy.uid", "==", user), startAfter(userPageCurrentQueryLastPost), limit(10)) :
   query(postsCollection, orderBy("createdAt", "desc"), where("createdBy.uid", "==", user), limit(10))
 }
 
 const returnCommentsQuery = (user) => {
   return currentQueryLastReply ? 
-  query(commentsCollection, orderBy("createdAt", "desc"), startAfter(currentQueryLastReply), where("createdBy.uid", "==", user), limit(10)) :
+  query(commentsCollection, orderBy("createdAt", "desc"), where("createdBy.uid", "==", user), startAfter(currentQueryLastReply), limit(10)) :
   query(commentsCollection, orderBy("createdAt", "desc"), where("createdBy.uid", "==", user), limit(10))
 }
 
 const fetchPosts = async (user) => {
-
   try {
     if (user === undefined) {
       const homePageQuery = returnHomePostsQuery();
@@ -186,9 +185,11 @@ const fetchPosts = async (user) => {
           repliesArray
         } 
       });
-      store.dispatch(fetchedPostsFromDB(posts));
-      homePageCurrentQueryLastPost = data.docs.pop();
-      console.log('fetched posts for home page');
+      if (!data.empty) {
+        store.dispatch(fetchedPostsFromDB(posts));
+        homePageCurrentQueryLastPost = data.docs.pop();
+        console.log('fetched posts for home page');
+      }
     } else {
       const userPageQuery = returnUserPostsQuery(user);
       const data = await getDocs(userPageQuery);
@@ -212,9 +213,11 @@ const fetchPosts = async (user) => {
           repliesArray
         } 
       });
-      store.dispatch(fetchedPostsFromDB(userPosts));
-      userPageCurrentQueryLastPost = data.docs.pop();
-      console.log('fetched posts for user page');
+      if (!data.empty) {
+        store.dispatch(fetchedPostsFromDB(userPosts));
+        userPageCurrentQueryLastPost = data.docs.pop();
+        console.log('fetched posts for user page');
+      }
     }
   } catch(error) {
     console.log(error)
@@ -225,7 +228,24 @@ const fetchPosts = async (user) => {
 const fetchSinglePost = async (postId) => {
   try {
     const fetchedData = await getDoc(doc(db, "Posts", postId));
-    return fetchedData.data();
+    const { 
+      createdBy, 
+      createdAt, 
+      postTitle,
+      postContent,
+      upvotes,
+      repliesArray,  
+    } = fetchedData.data();
+
+    return {
+      postId: fetchedData.id,
+      createdBy,
+      createdAt: createdAt.toDate().toDateString(),
+      postTitle,
+      postContent,
+      upvotes,
+      repliesArray
+    }
   } catch(error) {
     console.log(error)
   }
@@ -399,6 +419,27 @@ const editReplyInDB = async (id, content) => {
   }
 }
 
+const deletePostFromDB = async (id) => {
+  try {
+    const deletedPost = await deleteDoc(doc(postsCollection, id));
+    console.log('post deleted');
+    return deletedPost;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const deleteCommentFromDB = async (id) => {
+  try {
+    const deletedComment = await deleteDoc(doc(commentsCollection, id));
+    console.log('comment deleted');
+    return deletedComment;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
 
 export {
   signIn,
@@ -415,4 +456,6 @@ export {
   updateReplyUpvote,
   editPostInDB,
   editReplyInDB,
+  deletePostFromDB,
+  deleteCommentFromDB,
 }

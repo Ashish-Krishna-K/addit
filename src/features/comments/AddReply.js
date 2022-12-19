@@ -35,8 +35,10 @@ const AddReply = (props) => {
             value={replyContent.value}
             onChange={handleInput}
             ></textarea>
-            <button type="submit">Post</button>
-            <button type="button" onClick={handleCancel}>Cancel</button>
+            <div id="controls">
+                <button type="submit">Post</button>
+                <button type="button" onClick={handleCancel}>Cancel</button>
+            </div>
         </form>
     )
 }

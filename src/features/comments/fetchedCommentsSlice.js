@@ -12,9 +12,13 @@ const fetchedCommentsSlice = createSlice({
                     state.push(reply);
                 }
             })
+        },
+        resetCommentStateOnMount: (state) => {
+            console.log('cleared state');
+            return []
         }
     }
 });
 
 export default fetchedCommentsSlice.reducer;
-export const { fetchedCommentsFromDB } = fetchedCommentsSlice.actions;
+export const { fetchedCommentsFromDB, resetCommentStateOnMount } = fetchedCommentsSlice.actions;
