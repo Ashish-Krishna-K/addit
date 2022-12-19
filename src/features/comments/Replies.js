@@ -44,7 +44,7 @@ const Replies = ({id}) => {
             window.location.reload();
         })
     }
-    
+
     return(
         <div className="display-reply">
             {replyContent &&
@@ -53,6 +53,7 @@ const Replies = ({id}) => {
                         <Upvotes upvotes={upvotes} type={'reply'} id={id}/>
                         <div className="reply-content">
                             <Link to="/profile" state={createdBy} key={createdBy.uid}>{createdBy.displayName}</Link>
+                            <p>{createdAt}</p>
                             <span>{showReplyForm.show && showReplyForm.id === `${replyId}edit` ? 
                             <EditReply id={id} content={replyContent.value}/> :
                             <>

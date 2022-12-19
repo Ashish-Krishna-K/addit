@@ -226,8 +226,10 @@ const fetchPosts = async (user) => {
 } 
 
 const fetchSinglePost = async (postId) => {
+  console.log(postId);
   try {
     const fetchedData = await getDoc(doc(db, "Posts", postId));
+    console.log(fetchedData.exists());
     const { 
       createdBy, 
       createdAt, 
@@ -314,7 +316,7 @@ const fetchReplyFromDB = async (replyId) => {
       return  {
           replyId: fetchedData.id,
           createdBy,
-          createdAt,
+          createdAt: createdAt.toDate().toDateString(),
           parentPost,
           parent,
           replyContent,
@@ -421,6 +423,11 @@ const editReplyInDB = async (id, content) => {
 
 const deletePostFromDB = async (id) => {
   try {
+    const post = await getDoc(doc(postsCollection, id));
+    const filtered = post.data();
+    if (filtered.repliesArray.length > 0) {
+      filtered.repliesArray.forEach(async (reply) => await deleteCommentFromDB(reply))
+    }
     const deletedPost = await deleteDoc(doc(postsCollection, id));
     console.log('post deleted');
     return deletedPost;
@@ -431,6 +438,11 @@ const deletePostFromDB = async (id) => {
 
 const deleteCommentFromDB = async (id) => {
   try {
+    const reply = await getDoc(doc(commentsCollection, id));
+    const filtered = reply.data();
+    if (filtered.repliesArray.length > 0) {
+      filtered.repliesArray.forEach(async (reply) => await deleteCommentFromDB(reply))
+    }
     const deletedComment = await deleteDoc(doc(commentsCollection, id));
     console.log('comment deleted');
     return deletedComment;

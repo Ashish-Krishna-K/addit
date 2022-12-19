@@ -16,7 +16,7 @@ const AddReply = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        addReplyToDB(props.postId, replyContent, props.parentType, props.parentId).then(data => {
+        addReplyToDB(props.postId, replyContent, props.parentType, props.parentId).then(() => {
             setReplyContent({ value: '' });
             dispatch(replyButtonClicked(e.target.dataset.id));
             window.location.reload();
