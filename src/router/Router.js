@@ -2,7 +2,6 @@ import {
   BrowserRouter, 
   Routes, 
   Route, 
-  useLocation
 } from "react-router-dom";
 
 import Header from "../features/header/Header";

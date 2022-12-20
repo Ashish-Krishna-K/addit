@@ -46,38 +46,47 @@ const Replies = ({id}) => {
     }
 
     return(
-        <div className="display-reply">
-            {replyContent &&
-                <>
-                    <div className="active-reply">
-                        <Upvotes upvotes={upvotes} type={'reply'} id={id}/>
-                        <div className="reply-content">
-                            <Link to="/profile" state={createdBy} key={createdBy.uid}>{createdBy.displayName}</Link>
-                            <p>{createdAt}</p>
-                            <span>{showReplyForm.show && showReplyForm.id === `${replyId}edit` ? 
-                            <EditReply id={id} content={replyContent.value}/> :
-                            <>
-                                <p>{replyContent.value}</p>
-                                {createdBy.uid === user.uid && 
-                                <>
-                                 <button type="button" data-id={replyId} data-type="edit" onClick={handleReplyButtonClicked}>Edit</button>
-                                 <button type="button" onClick={deleteButtonClicked}>Delete</button>
-                                </>
-                                }
-                            </>}</span>
-                        </div>
-                        <div>
-                            <p>replies: {repliesArray.length}</p>
-                            {user.displayName && <button data-id={replyId} data-type="new" onClick={handleReplyButtonClicked}>Reply</button>}
-                            {showReplyForm.show && showReplyForm.id === replyId &&
-                                <AddReply postId={parentPost} parentType={'comment'} parentId={replyId}/>}
-                        </div>
-                    </div>
-                    <div className="nested-replies">{repliesArray.map((reply, index) => <Replies id={reply} key={index}/>)}</div>
-                </>
+        <>
+            {!fetchedReply.replyId ? <p>loading</p> :
+                <div className={parent.parentType === 'comment' ? "display-reply nested" : "display-reply"}>
+                    {replyContent &&
+                        <>
+                            <div className="active-reply">
+                                <Upvotes upvotes={upvotes} type={'reply'} id={id}/>
+                                <div className="reply-content">
+                                    <div className="reply-content-up">
+                                        <Link to="/profile" state={createdBy} key={createdBy.uid}>{createdBy.displayName}</Link>
+                                        <span>{createdAt}</span>
+                                    </div>
+                                    <div className="reply-content-mid">
+                                        <>{showReplyForm.show && showReplyForm.id === `${replyId}edit` ? 
+                                        <EditReply id={id} content={replyContent.value}/> :
+                                            <p>{replyContent.value}</p>
+                                        }</>
+                                    </div>
+                                    {(showReplyForm.show && showReplyForm.id === replyId) ?
+                                        <AddReply postId={parentPost} parentType={'comment'} parentId={replyId}/> :
+                                        <div className="reply-content-down">
+                                            <span>replies: {repliesArray.length}</span>
+                                            {createdBy.uid === user.uid && 
+                                                <>
+                                                    <button type="button" data-id={replyId} data-type="edit" onClick={handleReplyButtonClicked}>Edit</button>
+                                                    <button type="button" onClick={deleteButtonClicked}>Delete</button>
+                                                </>
+                                            }
+                                            {user.displayName && <button data-id={replyId} data-type="new" onClick={handleReplyButtonClicked}>Reply</button>}
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <>{repliesArray.map((reply, index) => <Replies id={reply} key={index} className="nested"/>)}</>
+                        </>
+                    }
+                </div>
             }
-        </div>
+        </>
     )
 }
 
 export default Replies
+

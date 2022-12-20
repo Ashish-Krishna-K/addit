@@ -451,6 +451,19 @@ const deleteCommentFromDB = async (id) => {
   }
 }
 
+const throttleFunction = (func, waitTime) => {
+  let lastTime = 0;
+  return function (...args) {
+    console.log(...args);
+    let now = new Date();
+    if (now - lastTime >= waitTime) {
+      console.log('should fetch posts');
+      func(...args);
+      lastTime = now
+    }
+  }
+}
+
 
 
 export {
@@ -470,4 +483,5 @@ export {
   editReplyInDB,
   deletePostFromDB,
   deleteCommentFromDB,
+  throttleFunction,
 }

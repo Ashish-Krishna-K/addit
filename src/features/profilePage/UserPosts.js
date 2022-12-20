@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector } from 'react-redux';
-import { fetchPosts } from "../../app/firebase";
+import { fetchPosts, throttleFunction } from "../../app/firebase";
 
 import PostView from "../posts/PostTitlesView";
 
@@ -14,8 +14,10 @@ const UserPosts = ({ userId }) => {
 
     const handleScroll = (e) => {
         const container = e.target;
-        if (container.scrollTop + container.offsetHeight === container.scrollHeight) {
-            fetchPosts(userId);
+        if (container.scrollTop === 0) fetchPosts(userId);
+        let totalMoved = container.scrollTop + container.offsetHeight;
+        if (totalMoved >= container.scrollHeight) {
+            throttleFunction(fetchPosts, 2000)(userId);
         };
     }
 

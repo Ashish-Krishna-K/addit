@@ -21,26 +21,42 @@ const Upvotes = ({ upvotes, type, id }) => {
     })
 
     const handleUpvoteClick = () => {
-        const newUpvote = upvotes.value + 1;
-        const newUpvoteArray = upvotedUsers.concat(user.uid);
-        const newDownvoteArray = downvotedUsers.filter(id => id !== user.uid);
-
-        if (type === 'post') {
-            updatePostUpvotes(newUpvote, newUpvoteArray, newDownvoteArray, id).then(() => window.location.reload())
+        if (!userHasDownvoted) {
+            const newUpvoteArray = upvotedUsers.concat(user.uid);
+            const newUpvote = newUpvoteArray.length - downvotedUsers.length;
+            if (type === 'post') {
+                updatePostUpvotes(newUpvote, newUpvoteArray, downvotedUsers, id).then(() => window.location.reload())
+            } else {
+                updateReplyUpvote(newUpvote, newUpvoteArray, downvotedUsers, id).then(() => window.location.reload())
+            }
         } else {
-            updateReplyUpvote(newUpvote, newUpvoteArray, newDownvoteArray, id).then(() => window.location.reload())
+            const newDownvoteArray = downvotedUsers.filter(id => id !== user.uid);
+            const newUpvote = upvotedUsers.length - newDownvoteArray.length;
+            if (type === 'post') {
+                updatePostUpvotes(newUpvote, upvotedUsers, newDownvoteArray, id).then(() => window.location.reload())
+            } else {
+                updateReplyUpvote(newUpvote, upvotedUsers, newDownvoteArray, id).then(() => window.location.reload())
+            }    
         }
     }
 
     const handleDownvoteClick = () => {
-        const newUpvote = upvotes.value - 1;
-        const newDownvoteArray = downvotedUsers.concat(user.uid);
-        const newUpvoteArray = upvotedUsers.filter(id => id !== user.uid);
-
-        if (type === 'post') {
-            updatePostUpvotes(newUpvote, newUpvoteArray, newDownvoteArray, id).then(() => window.location.reload())
+        if(!userHasUpvoted) {
+            const newDownvoteArray = downvotedUsers.concat(user.uid);
+            const newUpvote = upvotedUsers.length - newDownvoteArray.length;
+            if (type === 'post') {
+                updatePostUpvotes(newUpvote, upvotedUsers, newDownvoteArray, id).then(() => window.location.reload())
+            } else {
+                updateReplyUpvote(newUpvote, upvotedUsers, newDownvoteArray, id).then(() => window.location.reload())
+            }    
         } else {
-            updateReplyUpvote(newUpvote, newUpvoteArray, newDownvoteArray, id).then(() => window.location.reload())
+            const newUpvoteArray = upvotedUsers.filter(id => id !== user.uid);
+            const newUpvote = newUpvoteArray.length - downvotedUsers.length;
+            if (type === 'post') {
+                updatePostUpvotes(newUpvote, newUpvoteArray, downvotedUsers, id).then(() => window.location.reload())
+            } else {
+                updateReplyUpvote(newUpvote, newUpvoteArray, downvotedUsers, id).then(() => window.location.reload())
+            }
         }
     }
 

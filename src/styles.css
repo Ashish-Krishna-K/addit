@@ -1,7 +1,9 @@
-html, body, #root {
+html,
+body,
+#root {
     height: 100%;
     width: 100%;
-    
+
     background-color: black;
     color: orange;
 }
@@ -12,7 +14,8 @@ html, body, #root {
     padding: 0;
 }
 
-a, a:visited {
+a,
+a:visited {
     text-decoration: none;
     color: inherit;
 }
@@ -29,7 +32,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 1vmin;
 }
 
 #current-user-display {
@@ -42,54 +45,16 @@ header {
 main {
     flex: 1;
     overflow: auto;
+    box-sizing: border-box;
 }
 
-
-.post-title-view,
-.reply-view {
-    border: 1px solid white;
-    text-decoration: none;
+#home-page {
     display: flex;
-    min-height: 100px;
-}
-
-#post-title {
-    flex: 1;
-}
-
-#reply-view {
-    flex: 1;
-}
-
-.post-title-container {
-    border: 1px solid white;
-
+    flex-direction: column;
     height: 100%;
-    overflow: auto;
-
-    display: grid;
-    grid-auto-flow: row;
-    gap: 1.5rem;
 
     align-items: center;
-    justify-content: center;
-
 }
-
-.reply-container {
-    border: 1px solid white;
-
-    height: 100%;
-    overflow: auto;
-
-    display: grid;
-    grid-auto-flow: row;
-    gap: 1.5rem;
-
-    align-items: center;
-    justify-content: center;
-}
-
 
 #profile-page {
     overflow: auto;
@@ -97,10 +62,77 @@ main {
     flex-direction: column;
     gap: 1rem;
     height: 100%;
+
+    justify-content: center;
+    align-items: center;
 }
 
-#user-details {
-    align-self: center;
+
+#upvotes-section {
+    border: 1px solid white;
+}
+
+
+.post-title-view,
+.reply-view {
+    border: 1px solid white;
+    text-decoration: none;
+    min-height: 100px;
+    min-width: 100%;
+
+    display: flex;
+    gap: 1rem;
+}
+
+#post-title-details,
+#reply-view-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid white;
+
+    align-items: flex-start;
+    min-width: 50%;
+}
+
+.post-title-up,
+.reply-view-up {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+
+}
+
+.post-title-mid {
+    border: 1px solid white;
+    font-size: 2rem;
+    width: 100%;
+
+    text-align: justify;
+}
+
+.reply-view-mid {
+    border: 1px solid white;
+    font-size: 1.5rem;
+    width: 100%;
+    text-align: justify;
+
+}
+
+.post-title-container,
+.reply-container {
+    border: 1px solid white;
+
+    height: 100%;
+    width: 80%;
+    overflow: auto;
+
+    display: grid;
+    grid-auto-flow: row;
+    gap: 2rem;
+
+    padding: 1vmin;
+
 }
 
 .voted {
@@ -116,25 +148,57 @@ button:hover {
 
 #create-post-form {
     border: 1px solid white;
-    
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    height: 50%;
+    height: 100%;
+
+    gap: 2rem;
 }
 
-#post-title {
-    max-height: 20px;
-    width: 400px;
+#type-select {
+    width: 50%;
+    display: flex;
+    gap: 2rem;
+}
+
+#type-select>button{
+    flex: 1;
+}
+
+input#post-title {
+    width: 50%;
+    height: 1.5rem;
 }
 
 #post-content {
-    width: 400px;
-    height: 400px;
+    width: 50%;
+    height: 30rem;
 }
 
-#loggedin-user{
+#image-input {
+    border: 1px solid white;
+    width: 50%;
+    height: 30rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#form-controls {
+    width: 50%;
+    display: flex;
+    gap: 2rem;
+}
+
+#form-controls>button{
+    flex: 1;
+}
+
+#loggedin-user {
     display: flex;
 }
 
@@ -144,55 +208,165 @@ button:hover {
     border-radius: 100px;
 }
 
-#view-post {
-    height: 100%;
-
-    display: grid;
-    grid-template-columns: 1fr 10fr;
-    grid-template-rows: 2fr 1fr 5fr;
-
+#view-post{
     border: 1px solid white;
+
+    display: flex;
+    flex-direction: column;
+
 }
 
-#view-post>#upvotes-section {
-    grid-area: 1 / 1 / 1 / 2;
-}
+#post-section {
+    border: 1px solid white;
 
-#view-post>#reply {
-    grid-area: 2 / 1 / 3 / 3;
-}
+    display: flex;
 
-#view-post>#replies-section {
-    grid-area: 3 / 1 / 4 / 3;
+    padding: 2vmin;
+
 }
 
 #post-details {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    gap: 1rem;
 }
 
-#upvotes-section {
-    border: 1px solid white;
+.post-details-up {
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+
+    text-align: justify;
 }
 
-
-.display-reply{
+.post-details-mid {
     display: flex;
     flex-direction: column;
-    position: relative;
-    left: 5%;
     gap: 1rem;
+
+    padding-left: 1vmin;
+}
+
+#post-text-content {
     border: 1px solid white;
+    min-width: 500px;
+    max-width: 500px;
+    min-height: 500px;
+
+    overflow-wrap: break-word;
+}
+
+#post-image-content {
+    border: 1px solid white;
+    min-width: 500px;
+    max-width: 500px;
+    min-height: 500px;
+}
+
+#post-controls {
+    display: flex;
+    justify-content: space-around;
+}
+
+#display-post-title {
+    text-align: justify;
+}
+
+#add-reply-section {
+    border: 1px solid white;
+    display: flex;
+    align-items: center;
+    padding: 2vmin 5vmin;
+}
+
+#add-reply-form {
+    border: 1px solid white;
+}
+
+#edit-reply-form>textarea {
+    min-height: 150px;
+    min-width: 300px;
+}
+
+#edit-reply-form {
+    border: 1px solid white;
+
+    display: flex;
+    flex-direction: column;
+}
+
+#edit-reply-form-controls {
+    align-self: flex-end;
+}
+
+#add-reply-form>textarea{
+    min-height: 200px;
+    min-width: 500px;
+}
+
+#replies-section {
+    border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.display-reply {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    overflow: auto;
+
+    padding: 1vmin;
+
+    border-left: 1px solid white;
+}
+
+.nested {
+    box-sizing: border-box;
+
+    padding-top: 0.5vmin;
+    padding-left: 1.5vmin;
+    padding-bottom: 0;
+    padding-right: 0;
 
 }
 
 .active-reply {
     display: flex;
-    width: 100%;
+    padding: 1vmin;
+
+    border: 1px solid white;
+
 }
 
-svg {
-    text-align: center;
-    background: none;
+.reply-content {
+    width: 100%;
+    padding: 0 1vmin;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.reply-content-up {
+    display: flex;
+    gap: 2rem;
+}
+
+.reply-content-mid>p {
+    font-size: 1.5rem;
+    align-self: flex-start;
+    text-align: justify;
+    overflow-wrap: break-word;
+}
+
+.reply-content-down {
+    text-align: justify;
+
+    display: flex;
+    gap: 1rem;
 }

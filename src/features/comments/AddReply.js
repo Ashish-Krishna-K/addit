@@ -30,7 +30,7 @@ const AddReply = (props) => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} id="add-reply-form">
             <textarea
             value={replyContent.value}
             onChange={handleInput}

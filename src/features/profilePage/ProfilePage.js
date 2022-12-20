@@ -7,6 +7,7 @@ import UserReplies from "./UserComments";
 import { resetStateOnMount } from "../posts/fetchedPostsSlice";
 import { resetQueryLast } from "../../app/firebase";
 import { resetCommentStateOnMount } from "../comments/fetchedCommentsSlice";
+import DisplayUser from "../currentUser/DisplayUser";
 
 const ProfilePage = () => {
     const location = useLocation();
@@ -28,7 +29,7 @@ const ProfilePage = () => {
     return (
         <div id="profile-page" key={user.uid}>
             <div id="user-details">
-                <p>{user.displayName}</p>
+                <DisplayUser user={user} />
                 <button data-type='posts' onClick={handleViewButtonClick}>Posts</button>
                 <button data-type='comments' onClick={handleViewButtonClick}>Comments</button>
             </div>

@@ -5,17 +5,20 @@ import Upvotes from "../upvotes/Upvotes";
 const PostView = ({ post }) => {
     return (
         <div className="post-title-view">
-                <Upvotes upvotes={post.upvotes} type={'post'} id={post.postId} />
-                <div id="post-title-details">
-                    <Link to="/profile" state={post.createdBy} key={post.createdBy.uid}>{post.createdBy.displayName}</Link>
-                    <p>{post.createdAt}</p>
-                </div>
-                <Link to="/viewpost" state={{id: post.postId}} id="post-title">
-                    <p>
-                        {post.postTitle}
-                    </p>
+            <Upvotes upvotes={post.upvotes} type={'post'} id={post.postId} />
+            <div id="post-title-details">
+                <p className="post-title-up">
+                    <span>
+                        Posted by:
+                        <Link to="/profile" state={post.createdBy} key={post.createdBy.uid}>{post.createdBy.displayName}</Link>
+                    </span>
+                    <span>{post.createdAt}</span>
+                </p>
+                <Link to="/viewpost" state={{ id: post.postId }} id="post-title" className="post-title-mid">
+                    {post.postTitle}
                 </Link>
-                <p>replies: {post.repliesArray.length}</p>
+                <p className="post-title-down">replies: {post.repliesArray.length}</p>
+            </div>
         </div>
     )
 }

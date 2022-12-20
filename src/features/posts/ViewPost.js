@@ -51,31 +51,59 @@ const ViewPost = () => {
     }
 
     return (
-        <div id="view-post">{ !postTitle ? <p>loading</p> :
-            <>
-                <Upvotes upvotes={upvotes} type={'post'} id={id}/>
-                <div id="post-details">
-                    <Link to="/profile" state={createdBy} key={createdBy.uid}>{createdBy.displayName}</Link>
-                    <p>{createdAt}</p>
-                    <h2 id="display-post-title">{postTitle}</h2>
-                    {createdBy.uid === user.uid && <button type="button" id="delete-post-button" onClick={deleteButtonClicked}>Delete</button>}
-                    <>{
-                        postContent.type === 'text' ? 
-                        <div id="post-text-content">
-                            {createdBy.uid === user.uid && <Link to="/createpost" state={activePost}>
-                                <button>edit</button>
-                            </Link>}
-                            <p>{postContent.content}</p>
-                        </div>: 
-                        <div id="post-image-content">{postImages.map(image => <img src={image} alt="Post" key={image} />)}</div>
-                    }</>
-                </div>
-                <div id="reply">
-                    {user.displayName && <AddReply postId={id} parentType={'post'} parentId={id}/>}
-                </div>
-                <div id="replies-section">{repliesArray.map((reply, index) => <Replies id={reply} key={index}/>)}</div>
-            </>
-        }</div>
+        <div id="view-post">
+            { !postTitle ? <p>loading</p> :
+                <>
+                    <div id="post-section">
+                        <Upvotes upvotes={upvotes} type={'post'} id={id}/>
+                        <div id="post-details">
+                            <div className="post-details-up">
+                                <span><Link to="/profile" state={createdBy} key={createdBy.uid}>{createdBy.displayName}</Link></span>
+                                <span>{createdAt}</span>
+                            </div>
+                            <div className="post-details-mid">
+                                <h2 id="display-post-title">{postTitle}</h2>
+                                <>{
+                                    postContent.type === 'text' ? 
+                                    <>
+                                    <div id="post-text-content">
+                                        {postContent.content}
+                                    </div>
+                                    <div id="post-controls">
+                                        <span>replies: {repliesArray.length}</span>
+                                        <span>
+                                            {createdBy.uid === user.uid && 
+                                                <Link to="/createpost" state={activePost}>
+                                                    <button>edit</button>
+                                                </Link>
+                                            }
+                                        </span>
+                                        <span>
+                                            {
+                                                createdBy.uid === user.uid &&
+                                                <button
+                                                type="button" 
+                                                id="delete-post-button" 
+                                                onClick={deleteButtonClicked}
+                                                >
+                                                    Delete
+                                                </button>
+                                            }
+                                        </span>
+                                    </div>
+                                    </>: 
+                                    <div id="post-image-content">{postImages.map(image => <img src={image} alt="Post" key={image} />)}</div>
+                                }</>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="add-reply-section">
+                        {user.displayName && <AddReply postId={id} parentType={'post'} parentId={id}/>}
+                    </div>
+                    <div id="replies-section">{repliesArray.map((reply, index) => <Replies id={reply} key={index}/>)}</div>
+                </>
+            }
+        </div>
     )
 }
 

@@ -30,13 +30,15 @@ const EditReply = ({ id, content }) => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} id="edit-reply-form">
             <textarea
             value={replyContent.value}
             onChange={handleInput}
             />
-            <button type="submit">Save</button>
-            <button type="button" onClick={handleCancel}>Cancel</button>
+            <div id="edit-reply-form-controls">
+                <button type="submit">Save</button>
+                <button type="button" onClick={handleCancel}>Cancel</button>
+            </div>
         </form>
     )
 }

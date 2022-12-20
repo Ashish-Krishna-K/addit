@@ -6,10 +6,19 @@ const ReplyView = ({ reply }) => {
     return (
         <div className="reply-view">
                 <Upvotes upvotes={reply.upvotes} type={'reply'} id={reply.replyId}/>
-                <Link to="/viewpost" state={{id: reply.parentPost}} id="reply-view">
-                    {reply.replyContent.value}
-                </Link>
-                <p>replies: {reply.repliesArray.length}</p>
+                <div id="reply-view-details">
+                    <p className="reply-view-up">
+                    <span>
+                        Posted by:
+                        <Link to="/profile" state={reply.createdBy} key={reply.createdBy.uid}>{reply.createdBy.displayName}</Link>
+                    </span>
+                    <span>{reply.createdAt}</span>
+                    </p>
+                    <Link to="/viewpost" state={{id: reply.parentPost}} className="reply-view-mid">
+                        {reply.replyContent.value}
+                    </Link>
+                    <p className="reply-view-down">replies: {reply.repliesArray.length}</p>
+                </div>
         </div>
     )
 }

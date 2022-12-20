@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector } from 'react-redux';
-import { fetchComments } from "../../app/firebase";
+import { fetchComments, throttleFunction } from "../../app/firebase";
 
 import ReplyView from "../comments/ReplyView";
 
@@ -13,8 +13,11 @@ const UserReplies = ({ userId }) => {
 
     const handleScroll = (e) => {
         const container = e.target;
-        if (container.scrollTop + container.offsetHeight === container.scrollHeight) {
-            fetchComments(userId)
+        if (container.scrollTop === 0) fetchComments(userId);
+        let totalMoved = container.scrollTop + container.offsetHeight;
+
+        if (totalMoved >= container.scrollHeight) {
+            throttleFunction(fetchComments, 2000)(userId);
         };
     }
 

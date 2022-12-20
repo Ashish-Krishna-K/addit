@@ -91,7 +91,7 @@ const CreatePost = () => {
     }
     
     return (
-        <>{activeUser.displayName ? 
+        <div id="create-post-page">{activeUser.displayName ? 
             <form id="create-post-form" onSubmit={handleFormSubmit}>
                 <div id="type-select">
                     <button 
@@ -123,14 +123,16 @@ const CreatePost = () => {
                     <>
                         {
                             postType.value === 'image' ?
-                                <input 
-                                type="file" 
-                                multiple
-                                name="image[]"
-                                id="post-image" 
-                                accept={acceptedFileFormats}
-                                onChange={handleImageInput}
-                                /> :
+                                <div id="image-input">
+                                    <input 
+                                    type="file" 
+                                    multiple
+                                    name="image[]"
+                                    id="post-image" 
+                                    accept={acceptedFileFormats}
+                                    onChange={handleImageInput}
+                                    />
+                                </div> :
                                 <textarea
                                 name="content"
                                 id="post-content"
@@ -142,14 +144,14 @@ const CreatePost = () => {
                 </>
 
                 <div id="form-controls">
-                    <button type="button" onClick={handleCancel}>Cancel</button>
                     <button type="submit">Post</button>
+                    <button type="button" onClick={handleCancel}>Cancel</button>
                 </div>
 
             </form> :
 
             <h2>You need to login to create a new post</h2>
-        }</>
+        }</div>
     )
 }
 
