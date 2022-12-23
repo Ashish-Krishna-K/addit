@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Upvotes from "../upvotes/Upvotes";
+import TotalReplies from "./TotalReplies";
 
 const ReplyView = ({ reply }) => {
     return (
@@ -17,7 +18,9 @@ const ReplyView = ({ reply }) => {
                     <Link to="/viewpost" state={{id: reply.parentPost}} className="reply-view-mid">
                         {reply.replyContent.value}
                     </Link>
-                    <p className="reply-view-down">replies: {reply.repliesArray.length}</p>
+                    <div className="reply-view-down">
+                        <TotalReplies repliesArray={reply.repliesArray} />
+                    </div>
                 </div>
         </div>
     )

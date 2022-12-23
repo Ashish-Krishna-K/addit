@@ -8,6 +8,12 @@ import { replyButtonClicked } from '../comments/showReplyFormSlice'
 import AddReply from "../comments/AddReply";
 import Upvotes from "../upvotes/Upvotes";
 import EditReply from "./EditReply";
+import TotalReplies from "./TotalReplies";
+
+import { ReactComponent as ReplyIcon } from "../../images/reply.svg";
+import { ReactComponent as EditIcon } from "../../images/edit.svg";
+import { ReactComponent as DeleteIcon } from "../../images/delete-forever.svg";
+
 
 
 const Replies = ({id}) => {
@@ -67,14 +73,22 @@ const Replies = ({id}) => {
                                     {(showReplyForm.show && showReplyForm.id === replyId) ?
                                         <AddReply postId={parentPost} parentType={'comment'} parentId={replyId}/> :
                                         <div className="reply-content-down">
-                                            <span>replies: {repliesArray.length}</span>
+                                            <div>
+                                                <TotalReplies repliesArray={repliesArray} />
+                                            </div>
                                             {createdBy.uid === user.uid && 
                                                 <>
-                                                    <button type="button" data-id={replyId} data-type="edit" onClick={handleReplyButtonClicked}>Edit</button>
-                                                    <button type="button" onClick={deleteButtonClicked}>Delete</button>
+                                                    <button type="button" data-id={replyId} data-type="edit" className="edit-reply-button" onClick={handleReplyButtonClicked}>
+                                                        <EditIcon />
+                                                    </button>
+                                                    <button type="button" className="delete-reply-button" onClick={deleteButtonClicked}>
+                                                        <DeleteIcon />
+                                                    </button>
                                                 </>
                                             }
-                                            {user.displayName && <button data-id={replyId} data-type="new" onClick={handleReplyButtonClicked}>Reply</button>}
+                                            {user.displayName && <button data-id={replyId} data-type="new" className="add-reply-button" onClick={handleReplyButtonClicked}>
+                                                    <ReplyIcon />
+                                                </button>}
                                         </div>
                                     }
                                 </div>

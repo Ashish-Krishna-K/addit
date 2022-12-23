@@ -1,3 +1,8 @@
+:root {
+    --modalBG: #333333;
+    --textOrange: #ffe6cc;
+}
+
 html,
 body,
 #root {
@@ -5,7 +10,7 @@ body,
     width: 100%;
 
     background-color: black;
-    color: orange;
+    color: var(--textOrange);
 }
 
 * {
@@ -32,7 +37,13 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1vmin;
+    padding: 1vmax;
+    background-color: var(--modalBG);
+}
+
+header h1 {
+    color: orange;
+    font-size: 5rem;
 }
 
 #current-user-display {
@@ -40,7 +51,24 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0.5rem;
+    padding: 1vmax;
+    border-radius: 25px;
 }
+
+
+#loggedin-user {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+#loggedin-user>img {
+    height: 50px;
+    width: 50px;
+    border-radius: 100px;
+}
+
 
 main {
     flex: 1;
@@ -69,19 +97,26 @@ main {
 
 
 #upvotes-section {
-    border: 1px solid white;
+    padding: 1vmin;
 }
 
+#upvotes-section>button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
 
 .post-title-view,
 .reply-view {
-    border: 1px solid white;
     text-decoration: none;
     min-height: 100px;
     min-width: 100%;
 
     display: flex;
-    gap: 1rem;
+
+    background-color: var(--modalBG);
+    border-radius: 5px;
+    box-shadow: 0 0 1px 1px orange;
 }
 
 #post-title-details,
@@ -89,10 +124,11 @@ main {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border: 1px solid white;
 
     align-items: flex-start;
-    min-width: 50%;
+    width: 100%;
+    padding: 1vmax;
+
 }
 
 .post-title-up,
@@ -104,7 +140,6 @@ main {
 }
 
 .post-title-mid {
-    border: 1px solid white;
     font-size: 2rem;
     width: 100%;
 
@@ -121,7 +156,6 @@ main {
 
 .post-title-container,
 .reply-container {
-    border: 1px solid white;
 
     height: 100%;
     width: 80%;
@@ -142,8 +176,7 @@ main {
 }
 
 button:hover {
-    background-color: orange;
-    color: black;
+    cursor: pointer;
 }
 
 #create-post-form {
@@ -198,31 +231,24 @@ input#post-title {
     flex: 1;
 }
 
-#loggedin-user {
-    display: flex;
-}
-
-#loggedin-user>img {
-    height: 50px;
-    width: 50px;
-    border-radius: 100px;
-}
-
 #view-post{
-    border: 1px solid white;
-
     display: flex;
     flex-direction: column;
 
+    padding: 1vmax;
+
+    gap: 1rem;
 }
 
 #post-section {
     border: 1px solid white;
 
     display: flex;
+    padding: 2vmax;
 
-    padding: 2vmin;
+    background-color: var(--modalBG);
 
+    border-radius: 5px;
 }
 
 #post-details {
@@ -231,6 +257,8 @@ input#post-title {
     align-items: flex-start;
 
     gap: 1rem;
+
+    padding: 1vmin;
 }
 
 .post-details-up {
@@ -254,8 +282,10 @@ input#post-title {
     min-width: 500px;
     max-width: 500px;
     min-height: 500px;
-
+    text-align: justify;
     overflow-wrap: break-word;
+
+    padding: 1vmin;
 }
 
 #post-image-content {
@@ -263,6 +293,7 @@ input#post-title {
     min-width: 500px;
     max-width: 500px;
     min-height: 500px;
+    padding: 2vmax;
 }
 
 #post-controls {
@@ -278,16 +309,35 @@ input#post-title {
     border: 1px solid white;
     display: flex;
     align-items: center;
-    padding: 2vmin 5vmin;
+
+    padding: 1vmax 7vmax;
+    background-color: var(--modalBG);
 }
 
 #add-reply-form {
     border: 1px solid white;
 }
 
+#add-reply-form>textarea{
+    min-height: 200px;
+    min-width: 500px;
+
+    background-color: black;
+    color: white;
+    text-align: justify;
+
+    padding: 1vmin;
+}
+
+#add-reply-form>#controls {
+    justify-self: flex-end;
+}
+
 #edit-reply-form>textarea {
     min-height: 150px;
     min-width: 300px;
+
+    background-color: black;
 }
 
 #edit-reply-form {
@@ -301,16 +351,13 @@ input#post-title {
     align-self: flex-end;
 }
 
-#add-reply-form>textarea{
-    min-height: 200px;
-    min-width: 500px;
-}
-
 #replies-section {
     border: 1px solid white;
     display: flex;
     flex-direction: column;
     gap: 2rem;
+
+    background-color: var(--modalBG);
 }
 
 .display-reply {
@@ -322,7 +369,6 @@ input#post-title {
 
     padding: 1vmin;
 
-    border-left: 1px solid white;
 }
 
 .nested {
@@ -333,6 +379,7 @@ input#post-title {
     padding-bottom: 0;
     padding-right: 0;
 
+    border-left: 1px solid white;
 }
 
 .active-reply {
@@ -369,4 +416,27 @@ input#post-title {
 
     display: flex;
     gap: 1rem;
+}
+
+.reply-content-down>button {
+    height: 24px;
+    width: 24px;
+    background: none;
+    border: none;
+}
+
+.total-replies-icon,
+.add-reply-button,
+.edit-reply-button,
+.delete-reply-button {
+    fill: orange;
+}
+
+#edit-post-button,
+#delete-post-button {
+    height: 24px;
+    width: 24px;
+    fill: orange;
+    background: none;
+    border: none;
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import TotalReplies from "../comments/TotalReplies";
 import Upvotes from "../upvotes/Upvotes";
 
 const PostView = ({ post }) => {
@@ -17,7 +18,9 @@ const PostView = ({ post }) => {
                 <Link to="/viewpost" state={{ id: post.postId }} id="post-title" className="post-title-mid">
                     {post.postTitle}
                 </Link>
-                <p className="post-title-down">replies: {post.repliesArray.length}</p>
+                <p className="post-title-down">
+                    <TotalReplies repliesArray={post.repliesArray} />
+                </p>
             </div>
         </div>
     )

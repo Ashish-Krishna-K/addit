@@ -6,6 +6,11 @@ import { fetchSinglePost, downloadImages, deletePostFromDB } from "../../app/fir
 import AddReply from "../comments/AddReply";
 import Replies from "../comments/Replies";
 import Upvotes from "../upvotes/Upvotes";
+import TotalReplies from "../comments/TotalReplies";
+
+import { ReactComponent as EditIcon } from "../../images/edit.svg";
+import { ReactComponent as DeleteIcon } from "../../images/delete-forever.svg";
+
 
 const ViewPost = () => {
     const location = useLocation();
@@ -70,11 +75,13 @@ const ViewPost = () => {
                                         {postContent.content}
                                     </div>
                                     <div id="post-controls">
-                                        <span>replies: {repliesArray.length}</span>
+                                        <div>
+                                            <TotalReplies repliesArray={repliesArray} />
+                                        </div>
                                         <span>
                                             {createdBy.uid === user.uid && 
                                                 <Link to="/createpost" state={activePost}>
-                                                    <button>edit</button>
+                                                    <button id="edit-post-button"><EditIcon /></button>
                                                 </Link>
                                             }
                                         </span>
@@ -86,7 +93,7 @@ const ViewPost = () => {
                                                 id="delete-post-button" 
                                                 onClick={deleteButtonClicked}
                                                 >
-                                                    Delete
+                                                    <DeleteIcon />
                                                 </button>
                                             }
                                         </span>
