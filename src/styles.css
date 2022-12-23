@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Acme&family=Caveat&family=Permanent+Marker&display=swap');
+
 :root {
     --modalBG: #333333;
     --textOrange: #ffe6cc;
@@ -17,6 +19,19 @@ body,
     text-align: center;
     margin: 0;
     padding: 0;
+
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+input,
+textarea {
+    font-family: 'Caveat', cursive;
+    font-size: 2vmin;
+}
+
+button {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 1000;
 }
 
 a,
@@ -45,6 +60,8 @@ header h1 {
     color: orange;
     font-size: 7vmax;
     padding-left: 2vmax;
+
+    font-family: 'Permanent Marker', cursive;
 }
 
 #current-user-display {
@@ -89,6 +106,7 @@ header h1 {
     display: flex;
     gap: 1vmax;
     align-items: center;
+
 }
 
 #loggedin-user>img {
@@ -99,6 +117,7 @@ header h1 {
 
 #loggedin-user>p{
     font-size: 2vmax;
+    font-family: 'Permanent Marker', cursive;
 }
 
 main {
@@ -162,6 +181,12 @@ main {
     color: black;
 }
 
+#upvotes-section {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 1000;
+    font-size: 2vmax;
+}
+
 #upvotes-section>button {
     border: none;
     background: none;
@@ -212,6 +237,7 @@ main {
     font-size: 1vmax;
     display: flex;
     justify-content: space-around;
+    align-items: center;
     gap: 2vmax;
 }
 
@@ -220,6 +246,8 @@ main {
     width: 100%;
 
     text-align: justify;
+
+    font-family: 'Acme', sans-serif;
 }
 
 .reply-view-mid {
@@ -259,6 +287,8 @@ button:hover {
 
 #create-post-page>h2 {
     color: orange;
+    font-family: 'Permanent Marker', cursive;
+
 }
 
 #create-post-form {
@@ -344,6 +374,8 @@ input#post-title {
     background-color: orange;
     border-radius: 5px;
     border: none;
+
+    font-size: 2vmax;
 }
 
 #view-post{
@@ -450,6 +482,8 @@ input#post-title {
 #display-post-title {
     text-align: justify;
     font-size: 3vmax;
+    font-family: 'Acme', sans-serif;
+
 }
 
 #add-reply-section {
@@ -583,6 +617,7 @@ input#post-title {
 
 .reply-content-up {
     display: flex;
+    align-items: center;
     gap: 2vmax;
 
     font-size: 1vmax;
@@ -648,4 +683,19 @@ input#post-title {
     background-color: var(--modalBG);
     color: var(--textOrange);
     border: 1px solid var(--textOrange);
+}
+
+.show-createdby {
+    display: flex;
+    align-items: center;
+}
+
+.tiny-image {
+    border-radius: 100px;
+    height: 2vmax;
+    width: 2vmax;
+}
+
+.created-when {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }

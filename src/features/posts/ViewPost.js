@@ -11,6 +11,7 @@ import TotalReplies from "../comments/TotalReplies";
 import { ReactComponent as EditIcon } from "../../images/edit.svg";
 import { ReactComponent as DeleteIcon } from "../../images/delete-forever.svg";
 import PostImage from "./PostImage";
+import CreationDetails from "../currentUser/CreatonDetails";
 
 
 const ViewPost = () => {
@@ -64,8 +65,7 @@ const ViewPost = () => {
                         <Upvotes upvotes={upvotes} type={'post'} id={id}/>
                         <div id="post-details">
                             <div className="post-details-up">
-                                <span><Link to="/profile" state={createdBy} key={createdBy.uid}>{createdBy.displayName}</Link></span>
-                                <span>{createdAt}</span>
+                                <CreationDetails createdBy={createdBy} createdAt={createdAt} />
                             </div>
                             <div className="post-details-mid">
                                 <h2 id="display-post-title">{postTitle}</h2>

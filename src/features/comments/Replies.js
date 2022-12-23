@@ -9,6 +9,7 @@ import AddReply from "../comments/AddReply";
 import Upvotes from "../upvotes/Upvotes";
 import EditReply from "./EditReply";
 import TotalReplies from "./TotalReplies";
+import CreationDetails from "../currentUser/CreatonDetails";
 
 import { ReactComponent as ReplyIcon } from "../../images/reply.svg";
 import { ReactComponent as EditIcon } from "../../images/edit.svg";
@@ -62,8 +63,7 @@ const Replies = ({id}) => {
                                 <Upvotes upvotes={upvotes} type={'reply'} id={id}/>
                                 <div className="reply-content">
                                     <div className="reply-content-up">
-                                        <Link to="/profile" state={createdBy} key={createdBy.uid}>{createdBy.displayName}</Link>
-                                        <span>{createdAt}</span>
+                                        <CreationDetails createdBy={createdBy} createdAt={createdAt} />
                                     </div>
                                     <div className="reply-content-mid">
                                         <>{showReplyForm.show && showReplyForm.id === `${replyId}edit` ? 

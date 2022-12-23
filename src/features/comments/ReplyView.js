@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import CreationDetails from "../currentUser/CreatonDetails";
 import Upvotes from "../upvotes/Upvotes";
 import TotalReplies from "./TotalReplies";
 
@@ -9,11 +10,7 @@ const ReplyView = ({ reply }) => {
                 <Upvotes upvotes={reply.upvotes} type={'reply'} id={reply.replyId}/>
                 <div id="reply-view-details">
                     <p className="reply-view-up">
-                    <span>
-                        Posted by:
-                        <Link to="/profile" state={reply.createdBy} key={reply.createdBy.uid}>{reply.createdBy.displayName}</Link>
-                    </span>
-                    <span>{reply.createdAt}</span>
+                        <CreationDetails createdBy={reply.createdBy} createdAt={reply.createdAt} />
                     </p>
                     <Link to="/viewpost" state={{id: reply.parentPost}} className="reply-view-mid">
                         {reply.replyContent.value}

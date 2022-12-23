@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import TotalReplies from "../comments/TotalReplies";
 import Upvotes from "../upvotes/Upvotes";
+import CreationDetails from "../currentUser/CreatonDetails";
 
 const PostView = ({ post }) => {
     return (
@@ -9,11 +10,7 @@ const PostView = ({ post }) => {
             <Upvotes upvotes={post.upvotes} type={'post'} id={post.postId} />
             <div id="post-title-details">
                 <p className="post-title-up">
-                    <span>
-                        Posted by:
-                        <Link to="/profile" state={post.createdBy} key={post.createdBy.uid}>{post.createdBy.displayName}</Link>
-                    </span>
-                    <span>{post.createdAt}</span>
+                    <CreationDetails createdBy={post.createdBy} createdAt={post.createdAt} />
                 </p>
                 <Link to="/viewpost" state={{ id: post.postId }} id="post-title" className="post-title-mid">
                     {post.postTitle}
