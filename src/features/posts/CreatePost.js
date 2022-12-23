@@ -92,63 +92,69 @@ const CreatePost = () => {
     
     return (
         <div id="create-post-page">{activeUser.displayName ? 
-            <form id="create-post-form" onSubmit={handleFormSubmit}>
-                <div id="type-select">
-                    <button 
-                    type="button" 
-                    value="text" 
-                    onClick={handleTypeChange}
-                    >
-                        Text
-                    </button>
+            <>
+                <h2>Create a Post</h2>
+                <form id="create-post-form" onSubmit={handleFormSubmit}>
+                    <div id="type-select">
+                        <button 
+                        type="button" 
+                        value="text" 
+                        className={postType.value === 'text' ? 'active' : ''}
+                        onClick={handleTypeChange}
+                        >
+                            Text
+                        </button>
 
-                    <button 
-                    type="button" 
-                    value="image" 
-                    onClick={handleTypeChange}
-                    >
-                        Image
-                    </button>
+                        <button 
+                        type="button" 
+                        value="image" 
+                        className={postType.value === 'image' ? 'active' : ''}
+                        onClick={handleTypeChange}
+                        >
+                            Image
+                        </button>
 
-                </div>
-                <>
-                    <input 
-                    type="text" 
-                    name="title"
-                    id="post-title" 
-                    placeholder="Title"
-                    value={title.value}
-                    onChange={handleTitleInput}
-                    />
+                    </div>
                     <>
-                        {
-                            postType.value === 'image' ?
-                                <div id="image-input">
-                                    <input 
-                                    type="file" 
-                                    multiple
-                                    name="image[]"
-                                    id="post-image" 
-                                    accept={acceptedFileFormats}
-                                    onChange={handleImageInput}
-                                    />
-                                </div> :
-                                <textarea
-                                name="content"
-                                id="post-content"
-                                value={content.value} 
-                                onChange={handleContentInput}
-                                /> 
-                        }
+                        <input 
+                        type="text" 
+                        name="title"
+                        id="post-title" 
+                        placeholder="Title"
+                        value={title.value}
+                        onChange={handleTitleInput}
+                        />
+                        <>
+                            {
+                                postType.value === 'image' ?
+                                    <div id="image-input">
+                                        <input 
+                                        type="file" 
+                                        multiple
+                                        name="image[]"
+                                        id="post-image" 
+                                        accept={acceptedFileFormats}
+                                        onChange={handleImageInput}
+                                        />
+                                    </div> :
+                                    <textarea
+                                    name="content"
+                                    id="post-content"
+                                    value={content.value} 
+                                    placeholder="Description..."
+                                    onChange={handleContentInput}
+                                    /> 
+                            }
+                        </>
                     </>
-                </>
 
-                <div id="form-controls">
-                    <button type="submit">Post</button>
-                    <button type="button" onClick={handleCancel}>Cancel</button>
-                </div>
+                    <div id="form-controls">
+                        <button type="submit">Post</button>
+                        <button type="button" onClick={handleCancel}>Cancel</button>
+                    </div>
 
-            </form> :
+                </form> 
+            </>:
 
             <h2>You need to login to create a new post</h2>
         }</div>

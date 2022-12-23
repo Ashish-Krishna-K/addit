@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { resetQueryLast } from "../../app/firebase";
 import CurrentUser from "../currentUser/CurrentUser";
 
 
@@ -10,7 +9,7 @@ const Header = () => {
                 <h1>ADDIT</h1>
             </Link>
             <Link to="/createpost" >
-                <button>Create Post</button>
+                <button id="new-post-button">Create Post</button>
             </Link>
             <CurrentUser />
         </header>

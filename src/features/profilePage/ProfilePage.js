@@ -30,8 +30,22 @@ const ProfilePage = () => {
         <div id="profile-page" key={user.uid}>
             <div id="user-details">
                 <DisplayUser user={user} />
-                <button data-type='posts' onClick={handleViewButtonClick}>Posts</button>
-                <button data-type='comments' onClick={handleViewButtonClick}>Comments</button>
+                <div id="profile-page-controls">
+                    <button
+                     data-type='posts' 
+                     className={viewItems.value === 'posts' ? 'active' : ''}
+                     onClick={handleViewButtonClick}
+                    >
+                        Posts
+                    </button>
+                    <button
+                     data-type='comments'
+                     className={viewItems.value === 'comments' ? 'active' : ''} 
+                     onClick={handleViewButtonClick}
+                    >
+                        Comments
+                    </button>
+                </div>  
             </div>
             {viewItems.value === 'posts' && <UserPosts userId={user.uid}/>}
             {viewItems.value === 'comments' && <UserReplies userId={user.uid}/>}

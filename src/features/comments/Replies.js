@@ -40,9 +40,10 @@ const Replies = ({id}) => {
     } = fetchedReply
 
     const handleReplyButtonClicked = (e) => {
-        e.target.dataset.type === 'new' ? 
-        dispatch(replyButtonClicked(e.target.dataset.id)) :
-        dispatch(replyButtonClicked(`${e.target.dataset.id}edit`))
+        console.log(e.currentTarget);
+        e.currentTarget.dataset.type === 'new' ? 
+        dispatch(replyButtonClicked(e.currentTarget.dataset.id)) :
+        dispatch(replyButtonClicked(`${e.currentTarget.dataset.id}edit`))
     };
 
     const deleteButtonClicked = () => {

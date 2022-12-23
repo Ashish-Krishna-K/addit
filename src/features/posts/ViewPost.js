@@ -10,6 +10,7 @@ import TotalReplies from "../comments/TotalReplies";
 
 import { ReactComponent as EditIcon } from "../../images/edit.svg";
 import { ReactComponent as DeleteIcon } from "../../images/delete-forever.svg";
+import PostImage from "./PostImage";
 
 
 const ViewPost = () => {
@@ -74,7 +75,12 @@ const ViewPost = () => {
                                     <div id="post-text-content">
                                         {postContent.content}
                                     </div>
-                                    <div id="post-controls">
+                                    </>: 
+                                    <div id="post-image-content">
+                                        <PostImage imageArray={postImages} />
+                                    </div>
+                                }</>
+                                <div id="post-controls">
                                         <div>
                                             <TotalReplies repliesArray={repliesArray} />
                                         </div>
@@ -98,9 +104,6 @@ const ViewPost = () => {
                                             }
                                         </span>
                                     </div>
-                                    </>: 
-                                    <div id="post-image-content">{postImages.map(image => <img src={image} alt="Post" key={image} />)}</div>
-                                }</>
                             </div>
                         </div>
                     </div>

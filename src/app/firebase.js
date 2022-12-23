@@ -22,6 +22,7 @@ import {
   where, 
   getDoc, 
   limit,
+  arrayRemove,
 } from "firebase/firestore";
 import { 
   getDownloadURL, 
@@ -439,13 +440,29 @@ const deletePostFromDB = async (id) => {
 const deleteCommentFromDB = async (id) => {
   try {
     const reply = await getDoc(doc(commentsCollection, id));
-    const filtered = reply.data();
+    const filtered = await reply.data();
+    const parentType = filtered.parent.parentType;
+    const parent = filtered.parent.parentId;
     if (filtered.repliesArray.length > 0) {
       filtered.repliesArray.forEach(async (reply) => await deleteCommentFromDB(reply))
     }
     const deletedComment = await deleteDoc(doc(commentsCollection, id));
-    console.log('comment deleted');
-    return deletedComment;
+    if (parentType === "post") {
+      const updatedArr = arrayRemove(id);
+      const updateParent = await updateDoc(doc(postsCollection, parent), {
+        repliesArray: updatedArr,
+      });
+      console.log('comment deleted');
+      return updateParent;
+    } 
+    if (parentType === "comment") {
+      const updatedArr = arrayRemove(id)
+      const updateParent = await updateDoc(doc(commentsCollection, parent), {
+        repliesArray: updatedArr,
+      });
+      console.log('comment deleted');
+      return updateParent;
+    }
   } catch (error) {
     console.log(error)
   }

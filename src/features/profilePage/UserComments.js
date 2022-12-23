@@ -17,13 +17,14 @@ const UserReplies = ({ userId }) => {
         let totalMoved = container.scrollTop + container.offsetHeight;
 
         if (totalMoved >= container.scrollHeight) {
+            console.log('scroll end');
             throttleFunction(fetchComments, 2000)(userId);
         };
     }
 
     return (
             <div id="user-replies" className="reply-container" onScroll={handleScroll}>{ 
-                fetchedComments.length < 1 ? <p>Loading</p> :
+                fetchedComments.length < 1 ? <p>This user has not replied to any posts yet</p> :
                 fetchedComments.map(comment => <ReplyView reply={comment} key={comment.replyId} />) 
             }</div>
     )

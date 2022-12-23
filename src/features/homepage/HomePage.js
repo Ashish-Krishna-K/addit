@@ -21,6 +21,7 @@ const HomePage = () => {
         if (container.scrollTop === 0) fetchPosts();
         let totalMoved = container.scrollTop + container.offsetHeight;
         if (totalMoved >= container.scrollHeight) {
+            console.log('scroll end');
             throttleFunction(fetchPosts, 2000)();
         };
     }
