@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { fetchSinglePost, downloadImages, deletePostFromDB } from "../../app/firebase";
+
 import AddReply from "../comments/AddReply";
 import Replies from "../comments/Replies";
 import Upvotes from "../upvotes/Upvotes";
 import TotalReplies from "../comments/TotalReplies";
+import PostImage from "./PostImage";
+import CreationDetails from "../currentUser/CreatonDetails";
 
 import { ReactComponent as EditIcon } from "../../images/edit.svg";
 import { ReactComponent as DeleteIcon } from "../../images/delete-forever.svg";
-import PostImage from "./PostImage";
-import CreationDetails from "../currentUser/CreatonDetails";
 
 
 const ViewPost = () => {

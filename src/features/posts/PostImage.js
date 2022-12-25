@@ -30,7 +30,7 @@ const PostImage = ({ imageArray }) => {
             }
             </div>
             <>
-                {imageArray.map > 1 && 
+                {imageArray.length > 1 && 
                     <>
                         <button className="slide-control prev-image" onClick={showPrevImage}><LeftArrowIcon /></button>
                         <button className="slide-control next-image" onClick={showNextImage}><RightArrowIcon /></button>
