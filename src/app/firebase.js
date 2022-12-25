@@ -25,6 +25,7 @@ import {
   arrayRemove,
 } from "firebase/firestore";
 import { 
+  deleteObject,
   getDownloadURL, 
   getStorage, 
   ref, 
@@ -428,6 +429,13 @@ const deletePostFromDB = async (id) => {
     const filtered = post.data();
     if (filtered.repliesArray.length > 0) {
       filtered.repliesArray.forEach(async (reply) => await deleteCommentFromDB(reply))
+    }
+    if (filtered.postContent.type !== 'text') {
+      filtered.postContent.content.forEach(async (path) => {
+        const imageRef = ref(storage, path);
+        await deleteObject(imageRef);
+        console.log(path, 'image deleted');
+      })
     }
     const deletedPost = await deleteDoc(doc(postsCollection, id));
     console.log('post deleted');

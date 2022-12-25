@@ -677,6 +677,8 @@ input#post-title {
     padding: 1vmin;
 
     border-radius: 5px;
+
+    transition: background-color 0.3    s ease-in-out, color 0.3    s ease-in-out, border 0.3   s ease-in-out;
 }
 
 #new-post-button:hover {
