@@ -120,8 +120,9 @@ const CreatePost = () => {
                         type="text" 
                         name="title"
                         id="post-title" 
-                        placeholder="Title"
+                        placeholder="Title*"
                         value={title.value}
+                        required
                         onChange={handleTitleInput}
                         />
                         <>
@@ -131,6 +132,7 @@ const CreatePost = () => {
                                         <input 
                                         type="file" 
                                         multiple
+                                        required
                                         name="image[]"
                                         id="post-image" 
                                         accept={acceptedFileFormats}
@@ -141,7 +143,7 @@ const CreatePost = () => {
                                     name="content"
                                     id="post-content"
                                     value={content.value} 
-                                    placeholder="Description..."
+                                    placeholder="Description...(optional)"
                                     onChange={handleContentInput}
                                     /> 
                             }

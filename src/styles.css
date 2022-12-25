@@ -65,8 +65,8 @@ header h1 {
 }
 
 #new-post-button {
-    background-color: orange;
-    color: black;
+    background-color: #ffa500;
+    color: #000000;
     border: 1px solid black;
 
     font-size: 1.5vmax;
