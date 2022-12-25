@@ -28,18 +28,18 @@ const CurrentUser = () => {
             }
             <div id='login-buttons'>
                 {user.displayName === null ?
-                    <div id='login'>
-                        <button id='login-button' onClick={handleLogin}>
+                    <button id='login' onClick={handleLogin}>
+                        <span>
                             <LoginIcon />
-                        </button>
+                        </span>
                         <span>Login</span>
-                    </div> : 
-                    <div id='logout'>
-                        <button id='logout-button' onClick={handleLogout}>
+                    </button> : 
+                    <button id='logout' onClick={handleLogout}>
+                        <span>
                             <LogoutIcon />
-                        </button>
+                        </span>
                         <span>Logout</span>
-                    </div>
+                    </button>
                 }
             </div>
         </div>

@@ -58,20 +58,44 @@ header {
 
 header h1 {
     color: orange;
-    font-size: 7vmax;
+    font-size: 3vmax;
     padding-left: 2vmax;
 
     font-family: 'Permanent Marker', cursive;
 }
+
+#new-post-button {
+    background-color: orange;
+    color: black;
+    border: 1px solid black;
+
+    font-size: 1.5vmax;
+    padding: 1vmin;
+
+    border-radius: 5px;
+
+    transition: background-color 0.3    s ease-in-out, color 0.3    s ease-in-out, border 0.3   s ease-in-out;
+}
+
+#new-post-button:hover {
+    background-color: var(--modalBG);
+    color: var(--textOrange);
+    border: 1px solid var(--textOrange);
+}
+
 
 #current-user-display {
     align-self: stretch;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5vmax;
     padding: 1vmax;
     border-radius: 25px;
+}
+
+#current-user-display p {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 1.5vmax;
 }
 
 #login,
@@ -81,10 +105,17 @@ header h1 {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    cursor: pointer;
+
+    background: none;
+    border: none;
 }
 
-#login-button,
-#logout-button {
+#login svg,
+#logout svg,
+#login span,
+#logout span {
     height: 2vmax;
     width: 2vmax;
 
@@ -94,30 +125,28 @@ header h1 {
     fill: orange;
 }
 
-#login-button:hover,
-#logout-button:hover {
-    height: 2vmax;
-    width: 2vmax;
 
+#login:hover,
+#logout:hover,
+#login:hover svg,
+#logout:hover svg {
+    color: white;
+    transform: scale(1.1);
     fill: white;
+
+    font-size: 1vmax;
 }
 
 #loggedin-user {
     display: flex;
     gap: 1vmax;
     align-items: center;
-
 }
 
 #loggedin-user>img {
     height: 5vmax;
     width: 5vmax;
     border-radius: 100px;
-}
-
-#loggedin-user>p{
-    font-size: 2vmax;
-    font-family: 'Permanent Marker', cursive;
 }
 
 main {
@@ -668,24 +697,6 @@ input#post-title {
     border: none;
 }
 
-#new-post-button {
-    background-color: orange;
-    color: black;
-    border: 1px solid black;
-
-    font-size: 3vmax;
-    padding: 1vmin;
-
-    border-radius: 5px;
-
-    transition: background-color 0.3    s ease-in-out, color 0.3    s ease-in-out, border 0.3   s ease-in-out;
-}
-
-#new-post-button:hover {
-    background-color: var(--modalBG);
-    color: var(--textOrange);
-    border: 1px solid var(--textOrange);
-}
 
 .show-createdby {
     display: flex;
